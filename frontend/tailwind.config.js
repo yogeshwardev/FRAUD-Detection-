@@ -13,17 +13,17 @@ export default {
           DEFAULT: "#0B1120",
           soft: "#111a2e",
         },
-        // corporate accent — indigo primary, blue secondary
+        // corporate accent — deep slate / graphite
         accent: {
-          violet: "#4f46e5", // indigo-600 (primary)
-          cyan: "#2563eb", // blue-600 (secondary)
+          violet: "#0f172a", // slate-900 (primary)
+          cyan: "#334155", // slate-700 (secondary)
         },
         brand: {
-          50: "#eef2ff",
-          100: "#e0e7ff",
-          500: "#6366f1",
-          600: "#4f46e5",
-          700: "#4338ca",
+          50: "#f1f5f9",
+          100: "#e2e8f0",
+          500: "#334155",
+          600: "#0f172a",
+          700: "#020617",
         },
         risk: {
           low: "#16a34a",
@@ -32,11 +32,11 @@ export default {
         },
       },
       backgroundImage: {
-        "accent-gradient": "linear-gradient(135deg,#4f46e5 0%,#2563eb 100%)",
-        "accent-soft": "linear-gradient(135deg,rgba(79,70,229,0.12),rgba(37,99,235,0.12))",
+        "accent-gradient": "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)",
+        "accent-soft": "linear-gradient(135deg,rgba(15,23,42,0.08),rgba(51,65,85,0.08))",
       },
       boxShadow: {
-        glow: "0 8px 20px rgba(79,70,229,0.22)",
+        glow: "0 8px 20px rgba(15,23,42,0.18)",
         glass: "0 1px 2px rgba(16,24,40,0.04), 0 4px 16px rgba(16,24,40,0.06)",
         card: "0 1px 2px rgba(16,24,40,0.05), 0 1px 3px rgba(16,24,40,0.08)",
       },

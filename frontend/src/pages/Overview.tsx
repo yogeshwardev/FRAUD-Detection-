@@ -50,11 +50,11 @@ export function Overview() {
 
   const k = data.kpis;
   const kpis = [
-    { label: "Avg Trust Score", value: k.avg_trust, suffix: "", icon: ShieldCheck, tint: "bg-indigo-50 text-indigo-600", foot: "across 300 products", tip: "Mean Bayesian trust across all products (0–100), with fake reviews down-weighted." },
-    { label: "Predicted Return Rate", value: k.pred_return_rate, suffix: "%", icon: RotateCcw, tint: "bg-blue-50 text-blue-600", foot: "of all orders", tip: "Share of orders predicted / observed to be returned across the catalogue." },
+    { label: "Avg Trust Score", value: k.avg_trust, suffix: "", icon: ShieldCheck, tint: "bg-emerald-50 text-emerald-600", foot: "across 300 products", tip: "Mean Bayesian trust across all products (0–100), with fake reviews down-weighted." },
+    { label: "Predicted Return Rate", value: k.pred_return_rate, suffix: "%", icon: RotateCcw, tint: "bg-slate-100 text-slate-700", foot: "of all orders", tip: "Share of orders predicted / observed to be returned across the catalogue." },
     { label: "Fraud Users Flagged", value: k.fraud_flagged, suffix: "", icon: ShieldAlert, tint: "bg-rose-50 text-rose-600", foot: "medium + high tier", tip: "Users in the Medium or High fraud-probability tier." },
     { label: "High-Risk Products", value: k.high_risk_products, suffix: "", icon: AlertTriangle, tint: "bg-amber-50 text-amber-600", foot: "P(high risk) ≥ 70%", tip: "Products with P(high risk) ≥ 70%." },
-    { label: "Fake Reviews Detected", value: k.fake_reviews, suffix: "", icon: MessageSquareWarning, tint: "bg-violet-50 text-violet-600", foot: "P(fake) ≥ 50%", tip: "Reviews with P(fake) ≥ 50%." },
+    { label: "Fake Reviews Detected", value: k.fake_reviews, suffix: "", icon: MessageSquareWarning, tint: "bg-slate-100 text-slate-700", foot: "P(fake) ≥ 50%", tip: "Reviews with P(fake) ≥ 50%." },
   ];
 
   return (
@@ -82,7 +82,7 @@ export function Overview() {
             <BarChart data={data.return_by_category} margin={{ left: -18, right: 8, top: 8 }}>
               <XAxis dataKey="category" tick={{ fill: CHART.axis, fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: CHART.axis, fontSize: 12 }} axisLine={false} tickLine={false} unit="%" />
-              <Tooltip content={<ChartTooltip unit="%" />} cursor={{ fill: "rgba(79,70,229,0.07)" }} />
+              <Tooltip content={<ChartTooltip unit="%" />} cursor={{ fill: "rgba(15,23,42,0.05)" }} />
               <defs>
                 <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={CHART.violet} />
@@ -135,7 +135,7 @@ export function Overview() {
             <BarChart data={data.trust_hist} margin={{ left: -18, right: 8, top: 8 }}>
               <XAxis dataKey="bucket" tick={{ fill: CHART.axis, fontSize: 10 }} axisLine={false} tickLine={false} interval={0} angle={-30} textAnchor="end" height={48} />
               <YAxis tick={{ fill: CHART.axis, fontSize: 12 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(79,70,229,0.07)" }} />
+              <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(15,23,42,0.05)" }} />
               <Bar dataKey="count" name="products" fill={CHART.cyan} radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>

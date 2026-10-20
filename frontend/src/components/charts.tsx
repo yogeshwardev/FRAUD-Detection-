@@ -1,8 +1,8 @@
 import type { TooltipProps } from "recharts";
 
 export const CHART = {
-  violet: "#4f46e5", // indigo-600 (primary)
-  cyan: "#2563eb", // blue-600 (secondary)
+  violet: "#0f172a", // slate-900 (primary)
+  cyan: "#475569", // slate-600 (secondary)
   low: "#16a34a",
   med: "#d97706",
   high: "#dc2626",

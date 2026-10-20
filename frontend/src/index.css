@@ -58,23 +58,23 @@ html.dark .glass {
 }
 .hover-lift:hover {
   transform: translateY(-2px);
-  border-color: #c7cbff;
-  box-shadow: 0 10px 28px rgba(79, 70, 229, 0.12);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.1);
 }
 html.dark .hover-lift:hover {
-  border-color: rgba(99, 102, 241, 0.45);
+  border-color: rgba(148, 163, 184, 0.4);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* ---------------------------------------------------------------- text */
 .gradient-text {
-  background: linear-gradient(110deg, #4f46e5 0%, #2563eb 100%);
+  background: linear-gradient(110deg, #0f172a 0%, #334155 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 html.dark .gradient-text {
-  background: linear-gradient(110deg, #818cf8 0%, #38bdf8 100%);
+  background: linear-gradient(110deg, #f1f5f9 0%, #94a3b8 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -115,9 +115,9 @@ input[type="range"]::-webkit-slider-thumb {
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: #4f46e5;
+  background: #0f172a;
   border: 3px solid #fff;
-  box-shadow: 0 0 0 1px #c7cbff, 0 1px 2px rgba(16, 24, 40, 0.2);
+  box-shadow: 0 0 0 1px #cbd5e1, 0 1px 2px rgba(16, 24, 40, 0.2);
   cursor: pointer;
   transition: transform 0.15s;
 }
@@ -135,7 +135,7 @@ select:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(79, 70, 229, 0.5);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(15, 23, 42, 0.45);
   border-radius: 0.6rem;
 }
 html.dark a:focus-visible,
@@ -143,7 +143,7 @@ html.dark button:focus-visible,
 html.dark select:focus-visible,
 html.dark input:focus-visible,
 html.dark textarea:focus-visible {
-  box-shadow: 0 0 0 2px #0b1120, 0 0 0 4px rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 0 2px #0b1120, 0 0 0 4px rgba(148, 163, 184, 0.55);
 }
 
 /* -------------------------------------------------- dark-mode text/surface

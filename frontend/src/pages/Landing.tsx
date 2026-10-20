@@ -18,25 +18,25 @@ const FEATURES = [
     icon: ShieldCheck,
     title: "Bayesian Trust Score",
     desc: "Beta-Binomial posterior with a 95% credible interval — confidence, not just an average.",
-    tint: "bg-indigo-50 text-indigo-600",
+    tint: "bg-emerald-50 text-emerald-600",
   },
   {
     icon: RotateCcw,
     title: "Return Risk Prediction",
     desc: "Calibrated probability that an order will be returned, with the factors driving it.",
-    tint: "bg-blue-50 text-blue-600",
+    tint: "bg-amber-50 text-amber-600",
   },
   {
     icon: ShieldAlert,
     title: "Fraud User Detection",
     desc: "Isolation Forest + calibrated logistic flags wardrobing, multi-accounting and abuse.",
-    tint: "bg-emerald-50 text-emerald-600",
+    tint: "bg-rose-50 text-rose-600",
   },
   {
     icon: MessageSquareWarning,
     title: "Fake Review Detection",
     desc: "ComplementNB on text fused with behavioural signals to score P(fake) per review.",
-    tint: "bg-amber-50 text-amber-600",
+    tint: "bg-slate-100 text-slate-700",
   },
 ];
 
@@ -55,7 +55,7 @@ export function Landing() {
       {/* soft corporate header wash */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px]"
-        style={{ background: "linear-gradient(180deg,#eef2ff 0%,rgba(238,242,255,0) 100%)" }}
+        style={{ background: "linear-gradient(180deg,#eef1f6 0%,rgba(238,241,246,0) 100%)" }}
       />
 
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
@@ -79,9 +79,9 @@ export function Landing() {
           <motion.span
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3.5 py-1.5 text-xs font-medium text-indigo-700 shadow-sm"
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+            <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
             Probabilistic Machine Learning · Final Year Project
           </motion.span>
           <motion.h1
@@ -159,7 +159,7 @@ export function Landing() {
 
       {/* features */}
       <section className="mx-auto max-w-6xl px-6 py-14">
-        <h2 className="mb-1 text-center text-sm font-semibold uppercase tracking-wider text-indigo-600">
+        <h2 className="mb-1 text-center text-sm font-semibold uppercase tracking-wider text-slate-500">
           Five probabilistic modules
         </h2>
         <p className="mb-8 text-center text-2xl font-bold tracking-tight text-slate-900">
@@ -206,7 +206,7 @@ function Stat({ value, label, suffix }: { value: number; label: string; suffix: 
     <div className="text-center">
       <p className="text-3xl font-bold tabular-nums tracking-tight text-slate-900">
         {value >= 1000 ? Math.round(v).toLocaleString() : Math.round(v)}
-        <span className="text-indigo-600">{suffix}</span>
+        <span className="text-slate-900">{suffix}</span>
       </p>
       <p className="mt-1 text-xs font-medium text-slate-500">{label}</p>
     </div>
