@@ -1,0 +1,36 @@
+import type { TooltipProps } from "recharts";
+
+export const CHART = {
+  violet: "#8B5CF6",
+  cyan: "#22D3EE",
+  low: "#34D399",
+  med: "#FBBF24",
+  high: "#FB7185",
+  grid: "rgba(148,163,184,0.12)",
+  axis: "rgba(148,163,184,0.6)",
+};
+
+export const TIER_COLORS: Record<string, string> = {
+  Low: CHART.low,
+  Medium: CHART.med,
+  High: CHART.high,
+};
+
+export function ChartTooltip({ active, payload, label, unit = "" }: TooltipProps<number, string> & { unit?: string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="glass px-3 py-2 text-xs shadow-glass">
+      {label !== undefined && <p className="mb-1 font-medium text-slate-200">{label}</p>}
+      {payload.map((p, i) => (
+        <p key={i} className="flex items-center gap-2 text-slate-300">
+          <span className="h-2 w-2 rounded-full" style={{ background: p.color as string }} />
+          <span className="capitalize">{p.name}:</span>
+          <span className="font-semibold tabular-nums">
+            {typeof p.value === "number" ? p.value.toLocaleString() : p.value}
+            {unit}
+          </span>
+        </p>
+      ))}
+    </div>
+  );
+}
