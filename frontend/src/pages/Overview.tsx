@@ -50,18 +50,18 @@ export function Overview() {
 
   const k = data.kpis;
   const kpis = [
-    { label: "Avg Trust Score", value: k.avg_trust, suffix: "", icon: ShieldCheck, tip: "Mean Bayesian trust across all products (0–100), with fake reviews down-weighted." },
-    { label: "Predicted Return Rate", value: k.pred_return_rate, suffix: "%", icon: RotateCcw, tip: "Share of orders predicted / observed to be returned across the catalogue." },
-    { label: "Fraud Users Flagged", value: k.fraud_flagged, suffix: "", icon: ShieldAlert, tip: "Users in the Medium or High fraud-probability tier." },
-    { label: "High-Risk Products", value: k.high_risk_products, suffix: "", icon: AlertTriangle, tip: "Products with P(high risk) ≥ 70%." },
-    { label: "Fake Reviews Detected", value: k.fake_reviews, suffix: "", icon: MessageSquareWarning, tip: "Reviews with P(fake) ≥ 50%." },
+    { label: "Avg Trust Score", value: k.avg_trust, suffix: "", icon: ShieldCheck, tint: "bg-indigo-50 text-indigo-600", foot: "across 300 products", tip: "Mean Bayesian trust across all products (0–100), with fake reviews down-weighted." },
+    { label: "Predicted Return Rate", value: k.pred_return_rate, suffix: "%", icon: RotateCcw, tint: "bg-blue-50 text-blue-600", foot: "of all orders", tip: "Share of orders predicted / observed to be returned across the catalogue." },
+    { label: "Fraud Users Flagged", value: k.fraud_flagged, suffix: "", icon: ShieldAlert, tint: "bg-rose-50 text-rose-600", foot: "medium + high tier", tip: "Users in the Medium or High fraud-probability tier." },
+    { label: "High-Risk Products", value: k.high_risk_products, suffix: "", icon: AlertTriangle, tint: "bg-amber-50 text-amber-600", foot: "P(high risk) ≥ 70%", tip: "Products with P(high risk) ≥ 70%." },
+    { label: "Fake Reviews Detected", value: k.fake_reviews, suffix: "", icon: MessageSquareWarning, tint: "bg-violet-50 text-violet-600", foot: "P(fake) ≥ 50%", tip: "Reviews with P(fake) ≥ 50%." },
   ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           {k.total_products} products · {k.total_users.toLocaleString()} users ·{" "}
           {k.total_orders.toLocaleString()} orders · {k.total_reviews.toLocaleString()} reviews
         </p>
@@ -82,7 +82,7 @@ export function Overview() {
             <BarChart data={data.return_by_category} margin={{ left: -18, right: 8, top: 8 }}>
               <XAxis dataKey="category" tick={{ fill: CHART.axis, fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: CHART.axis, fontSize: 12 }} axisLine={false} tickLine={false} unit="%" />
-              <Tooltip content={<ChartTooltip unit="%" />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+              <Tooltip content={<ChartTooltip unit="%" />} cursor={{ fill: "rgba(79,70,229,0.07)" }} />
               <defs>
                 <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={CHART.violet} />
@@ -135,7 +135,7 @@ export function Overview() {
             <BarChart data={data.trust_hist} margin={{ left: -18, right: 8, top: 8 }}>
               <XAxis dataKey="bucket" tick={{ fill: CHART.axis, fontSize: 10 }} axisLine={false} tickLine={false} interval={0} angle={-30} textAnchor="end" height={48} />
               <YAxis tick={{ fill: CHART.axis, fontSize: 12 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+              <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(79,70,229,0.07)" }} />
               <Bar dataKey="count" name="products" fill={CHART.cyan} radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -164,9 +164,9 @@ export function Overview() {
       <div className="grid gap-4 lg:grid-cols-2">
         <MotionCard delay={0.1}>
           <CardHead title="Top 10 Risky Products" icon={<Boxes className="h-4 w-4" />} />
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-slate-100">
             {data.top_risky_products.map((p) => (
-              <Link key={p.id} to={`/products/${p.id}`} className="flex items-center gap-3 py-2.5 transition hover:bg-white/5">
+              <Link key={p.id} to={`/products/${p.id}`} className="flex items-center gap-3 py-2.5 transition hover:bg-slate-50">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{p.name}</p>
                   <p className="text-xs text-slate-500">{p.category} · Trust {p.trust}</p>
@@ -182,9 +182,9 @@ export function Overview() {
 
         <MotionCard delay={0.16}>
           <CardHead title="Top 10 Suspicious Users" icon={<ShieldAlert className="h-4 w-4" />} />
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-slate-100">
             {data.top_fraud_users.map((u) => (
-              <Link key={u.id} to={`/fraud/${u.id}`} className="flex items-center gap-3 py-2.5 transition hover:bg-white/5">
+              <Link key={u.id} to={`/fraud/${u.id}`} className="flex items-center gap-3 py-2.5 transition hover:bg-slate-50">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{u.name}</p>
                   <p className="truncate text-xs text-slate-500">
@@ -209,6 +209,8 @@ function Kpi({
   value,
   suffix,
   icon: Icon,
+  tint,
+  foot,
   tip,
   delay,
 }: {
@@ -216,6 +218,8 @@ function Kpi({
   value: number;
   suffix: string;
   icon: React.ElementType;
+  tint: string;
+  foot: string;
   tip: string;
   delay: number;
 }) {
@@ -223,16 +227,17 @@ function Kpi({
   return (
     <MotionCard delay={delay} className="p-4 hover-lift">
       <div className="mb-3 flex items-center justify-between">
-        <div className="grid h-9 w-9 place-items-center rounded-xl bg-accent-soft text-accent-cyan">
+        <div className={`grid h-9 w-9 place-items-center rounded-xl ${tint}`}>
           <Icon className="h-[18px] w-[18px]" />
         </div>
         <InfoTip text={tip} />
       </div>
-      <p className="text-2xl font-bold tabular-nums tracking-tight">
+      <p className="text-[1.7rem] font-bold leading-none tabular-nums tracking-tight text-slate-900">
         {Number.isInteger(value) ? Math.round(v).toLocaleString() : v.toFixed(1)}
-        <span className="text-base text-slate-400">{suffix}</span>
+        <span className="text-base text-slate-500">{suffix}</span>
       </p>
-      <p className="mt-0.5 text-xs text-slate-400">{label}</p>
+      <p className="mt-1.5 text-xs font-medium text-slate-600">{label}</p>
+      <p className="mt-0.5 text-[11px] text-slate-500">{foot}</p>
     </MotionCard>
   );
 }
@@ -240,8 +245,8 @@ function Kpi({
 function CardHead({ title, tip, icon }: { title: string; tip?: string; icon?: React.ReactNode }) {
   return (
     <div className="mb-4 flex items-center gap-2">
-      {icon && <span className="text-accent-cyan">{icon}</span>}
-      <h3 className="font-semibold">{title}</h3>
+      {icon && <span className="text-accent-violet">{icon}</span>}
+      <h3 className="font-semibold text-slate-900">{title}</h3>
       {tip && <InfoTip text={tip} />}
       <div className="flex-1" />
       {!icon && <TrendingUp className="h-4 w-4 text-slate-600" />}

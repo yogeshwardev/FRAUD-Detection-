@@ -42,7 +42,7 @@ export function About() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">How It Works</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           From raw synthetic events to calibrated, uncertainty-aware decisions.
         </p>
       </div>
@@ -60,13 +60,13 @@ export function About() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.1 }}
-                className="flex-1 rounded-2xl bg-white/5 p-4 text-center ring-1 ring-inset ring-white/10"
+                className="flex-1 rounded-2xl bg-slate-50 p-4 text-center ring-1 ring-inset ring-slate-200"
               >
                 <div className="mx-auto mb-2 grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent-cyan">
                   <p.icon className="h-5 w-5" />
                 </div>
                 <p className="text-sm font-semibold">{p.title}</p>
-                <p className="mt-1 text-[11px] leading-snug text-slate-400">{p.desc}</p>
+                <p className="mt-1 text-[11px] leading-snug text-slate-500">{p.desc}</p>
               </motion.div>
               {i < PIPELINE.length - 1 && (
                 <ArrowRight className="hidden h-5 w-5 shrink-0 text-slate-600 lg:block" />
@@ -82,7 +82,7 @@ export function About() {
           <motion.div key={c.title} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
             <Card className="h-full">
               <h3 className="mb-2 font-semibold gradient-text">{c.title}</h3>
-              <p className="text-sm leading-relaxed text-slate-300">{c.body}</p>
+              <p className="text-sm leading-relaxed text-slate-600">{c.body}</p>
             </Card>
           </motion.div>
         ))}
@@ -90,7 +90,7 @@ export function About() {
 
       <Card>
         <h3 className="mb-2 font-semibold">Why synthetic data?</h3>
-        <p className="text-sm leading-relaxed text-slate-300">
+        <p className="text-sm leading-relaxed text-slate-600">
           Real platforms never publish labelled fraud, fake reviews or return outcomes. We generate a reproducible,
           seeded world where ground-truth labels are known, patterns are injected realistically (wardrobing,
           shared devices, review bursts, sizing friction), and deliberate overlap keeps the problem honest — so the

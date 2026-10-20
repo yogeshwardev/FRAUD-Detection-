@@ -32,7 +32,7 @@ export function ModelPerformance() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Model Performance</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           Held-out evaluation (25% test split). Every classifier is compared against a non-probabilistic baseline.
         </p>
       </div>
@@ -42,7 +42,7 @@ export function ModelPerformance() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={cn("rounded-xl px-4 py-2 text-sm font-medium transition", tab === t.key ? "bg-accent-gradient text-white shadow-glow" : "border border-white/10 text-slate-400 hover:bg-white/5")}
+            className={cn("rounded-xl px-4 py-2 text-sm font-medium transition", tab === t.key ? "bg-accent-gradient text-white shadow-glow" : "border border-slate-200 text-slate-500 hover:bg-slate-50")}
           >
             {t.label}
           </button>
@@ -154,7 +154,7 @@ export function ModelPerformance() {
                 <span className="text-slate-500">→</span>
                 <Pill label="Bayesian rate" value={`${data.comparison.one_order_one_return.bayes_return_rate}%`} tone="low" />
               </div>
-              <p className="text-xs leading-relaxed text-slate-300">{data.comparison.one_order_one_return.explanation}</p>
+              <p className="text-xs leading-relaxed text-slate-600">{data.comparison.one_order_one_return.explanation}</p>
             </div>
           )}
           {data.comparison.trust_gap_example && (
@@ -165,7 +165,7 @@ export function ModelPerformance() {
                 <span className="text-slate-500">→</span>
                 <Pill label="Bayesian rating" value={`${data.comparison.trust_gap_example.bayesian_rating}★`} tone="low" />
               </div>
-              <p className="text-xs leading-relaxed text-slate-300">
+              <p className="text-xs leading-relaxed text-slate-600">
                 For product #{data.comparison.trust_gap_example.product_id}, down-weighting likely-fake reviews and shrinking toward the
                 prior lowers the rating by {data.comparison.trust_gap_example.gap.toFixed(2)}★ — a more honest estimate ({data.comparison.trust_gap_example.confidence} confidence).
               </p>
@@ -190,8 +190,8 @@ function pickModels(data: ModelMetrics, tab: string): { primary: Metric; others:
 function Stat({ label, value, tip, invert }: { label: string; value: number; tip?: string; invert?: boolean }) {
   const good = invert ? value < 0.15 : value > 0.8;
   return (
-    <div className="rounded-xl bg-white/5 p-3">
-      <p className={cn("text-xl font-bold tabular-nums", good ? "text-risk-low" : "text-slate-200")}>{value.toFixed(3)}</p>
+    <div className="rounded-xl bg-slate-50 p-3">
+      <p className={cn("text-xl font-bold tabular-nums", good ? "text-risk-low" : "text-slate-700")}>{value.toFixed(3)}</p>
       <p className="flex items-center gap-1 text-[11px] text-slate-500">
         {label}
         {tip && <InfoTip text={tip} />}
@@ -202,7 +202,7 @@ function Stat({ label, value, tip, invert }: { label: string; value: number; tip
 
 function Row({ m, highlight }: { m: Metric; highlight?: boolean }) {
   return (
-    <tr className={cn("border-t border-white/5", highlight && "bg-accent-soft/30")}>
+    <tr className={cn("border-t border-slate-100", highlight && "bg-accent-soft/30")}>
       <td className="py-2 pr-2 font-medium">
         {m.model}
         {highlight && <span className="ml-2 rounded-full bg-accent-gradient px-1.5 py-0.5 text-[9px] text-white">OURS</span>}

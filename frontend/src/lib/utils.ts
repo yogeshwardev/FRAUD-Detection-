@@ -26,19 +26,19 @@ export type Tier = "Low" | "Medium" | "High";
 export function tier(t: string) {
   switch (t) {
     case "High":
-      return { text: "text-risk-high", bg: "bg-risk-high/15", ring: "ring-risk-high/40", hex: "#FB7185" };
+      return { text: "text-risk-high", bg: "bg-risk-high/10", ring: "ring-risk-high/30", hex: "#dc2626" };
     case "Medium":
-      return { text: "text-risk-med", bg: "bg-risk-med/15", ring: "ring-risk-med/40", hex: "#FBBF24" };
+      return { text: "text-risk-med", bg: "bg-risk-med/10", ring: "ring-risk-med/30", hex: "#d97706" };
     default:
-      return { text: "text-risk-low", bg: "bg-risk-low/15", ring: "ring-risk-low/40", hex: "#34D399" };
+      return { text: "text-risk-low", bg: "bg-risk-low/10", ring: "ring-risk-low/30", hex: "#16a34a" };
   }
 }
 
 /** map a 0-100 trust score to a colour. */
 export function trustHex(v: number) {
-  if (v >= 70) return "#34D399";
-  if (v >= 45) return "#FBBF24";
-  return "#FB7185";
+  if (v >= 70) return "#16a34a";
+  if (v >= 45) return "#d97706";
+  return "#dc2626";
 }
 
 export function confidenceTone(c: string) {

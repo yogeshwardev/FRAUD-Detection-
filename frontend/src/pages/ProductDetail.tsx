@@ -29,14 +29,14 @@ export function ProductDetail() {
 
   return (
     <div className="space-y-6">
-      <Link to="/products" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200">
+      <Link to="/products" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
         <ArrowLeft className="h-4 w-4" /> Back to products
       </Link>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{p.name}</h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             {p.category} · {fmtInr(p.price)} ·{" "}
             <span className="inline-flex items-center gap-1">
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> {p.seller_rating} seller rating
@@ -56,9 +56,9 @@ export function ProductDetail() {
             <InfoTip text="Posterior mean of a Beta-Binomial model over positive vs negative reviews, with each review down-weighted by its probability of being fake." />
           </div>
           <Gauge value={s.trust} low={s.trust_low} high={s.trust_high} suffix="" label="/ 100" color={trustHex(s.trust)} />
-          <p className="mt-2 text-center text-sm text-slate-400">
+          <p className="mt-2 text-center text-sm text-slate-500">
             95% credible interval{" "}
-            <span className="font-medium text-slate-200">
+            <span className="font-medium text-slate-700">
               {s.trust_low} – {s.trust_high}
             </span>
           </p>
@@ -75,7 +75,7 @@ export function ProductDetail() {
           </div>
           <Bar label="Naïve average" value={s.naive_rating} pctVal={naivePct} color="#64748B" />
           <Bar label="Bayesian adjusted" value={s.bayesian_rating} pctVal={bayesPct} color={trustHex(s.trust)} />
-          <div className="mt-4 rounded-xl bg-accent-soft/60 p-3 text-xs leading-relaxed text-slate-300">
+          <div className="mt-4 rounded-xl bg-accent-soft/60 p-3 text-xs leading-relaxed text-slate-600">
             {s.naive_rating > s.bayesian_rating + 0.2 ? (
               <>The plain average <b>overstates</b> this product by {(s.naive_rating - s.bayesian_rating).toFixed(2)}★ — fake or sparse reviews inflate it. The Bayesian score corrects for that.</>
             ) : s.bayesian_rating > s.naive_rating + 0.2 ? (
@@ -108,7 +108,7 @@ export function ProductDetail() {
         </div>
         <ul className="grid gap-2 sm:grid-cols-2">
           {data.risk_reasons.map((r, i) => (
-            <li key={i} className="flex items-start gap-2 rounded-xl bg-white/5 p-3 text-sm text-slate-300">
+            <li key={i} className="flex items-start gap-2 rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
               <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-cyan" />
               {r}
             </li>
@@ -128,7 +128,7 @@ export function ProductDetail() {
           {data.reviews.map((r) => {
             const fake = r.p_fake >= 0.5;
             return (
-              <div key={r.id} className="flex items-start gap-3 rounded-xl bg-white/5 p-3">
+              <div key={r.id} className="flex items-start gap-3 rounded-xl bg-slate-50 p-3">
                 <div className="flex w-12 shrink-0 flex-col items-center">
                   <span className="flex items-center gap-0.5 text-sm font-semibold text-amber-400">
                     {r.rating}
@@ -136,7 +136,7 @@ export function ProductDetail() {
                   </span>
                   {r.verified_purchase && <span className="mt-1 text-[9px] text-risk-low">verified</span>}
                 </div>
-                <p className="min-w-0 flex-1 text-sm text-slate-300">{r.text}</p>
+                <p className="min-w-0 flex-1 text-sm text-slate-600">{r.text}</p>
                 <span
                   className={cn(
                     "shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset",
@@ -158,10 +158,10 @@ function Bar({ label, value, pctVal, color }: { label: string; value: number; pc
   return (
     <div className="mb-3">
       <div className="mb-1 flex justify-between text-sm">
-        <span className="text-slate-400">{label}</span>
+        <span className="text-slate-500">{label}</span>
         <span className="font-semibold tabular-nums">{value.toFixed(2)} ★</span>
       </div>
-      <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
         <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pctVal}%`, background: color }} />
       </div>
     </div>
@@ -170,7 +170,7 @@ function Bar({ label, value, pctVal, color }: { label: string; value: number; pc
 
 function Mini({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-white/5 p-2">
+    <div className="rounded-xl bg-slate-50 p-2">
       <p className="text-sm font-semibold tabular-nums">{value}</p>
       <p className="text-[10px] text-slate-500">{label}</p>
     </div>

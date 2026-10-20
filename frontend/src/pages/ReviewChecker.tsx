@@ -46,7 +46,7 @@ export function ReviewChecker() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Fake Review Checker</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           Paste any review. A ComplementNB text model fused with behavioural features estimates the probability it's fake.
         </p>
       </div>
@@ -62,7 +62,7 @@ export function ReviewChecker() {
             onChange={(e) => setText(e.target.value)}
             rows={6}
             placeholder="Paste a product review here…"
-            className="w-full resize-none rounded-xl border border-white/10 bg-white/5 p-3 text-sm outline-none placeholder:text-slate-500 focus:ring-1 focus:ring-accent-violet/40"
+            className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm outline-none placeholder:text-slate-500 focus:ring-1 focus:ring-accent-violet/40"
           />
           <div className="mt-3 flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-1">
@@ -72,7 +72,7 @@ export function ReviewChecker() {
                 </button>
               ))}
             </div>
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-400">
+            <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-500">
               <input type="checkbox" checked={verified} onChange={(e) => setVerified(e.target.checked)} className="accent-accent-violet" />
               Verified purchase
             </label>
@@ -90,7 +90,7 @@ export function ReviewChecker() {
 
         <Card>
           {!result ? (
-            <div className="grid h-full min-h-[280px] place-items-center text-center text-slate-400">
+            <div className="grid h-full min-h-[280px] place-items-center text-center text-slate-500">
               <div>
                 <AlertCircle className="mx-auto mb-3 h-10 w-10 text-slate-600" />
                 <p className="text-sm">Results will appear here with the suspicious words highlighted.</p>
@@ -114,13 +114,13 @@ export function ReviewChecker() {
                 </div>
               </div>
 
-              <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+              <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
                 <div className="h-full rounded-full transition-all duration-700" style={{ width: `${result.probability * 100}%`, background: fake ? "#FB7185" : "#34D399" }} />
               </div>
 
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-400">Review with flags</p>
-                <p className="rounded-xl bg-white/5 p-3 text-sm leading-relaxed">
+                <p className="mb-1.5 text-xs font-medium text-slate-500">Review with flags</p>
+                <p className="rounded-xl bg-slate-50 p-3 text-sm leading-relaxed">
                   {text.split(/(\s+)/).map((w, i) => {
                     const clean = w.toLowerCase().replace(/[^a-z']/g, "");
                     return suspiciousSet.has(clean) ? (
@@ -133,10 +133,10 @@ export function ReviewChecker() {
               </div>
 
               <div>
-                <p className="mb-1.5 text-xs font-medium text-slate-400">Why</p>
+                <p className="mb-1.5 text-xs font-medium text-slate-500">Why</p>
                 <ul className="space-y-1.5">
                   {result.reasons.map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+                    <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
                       <span className={cn("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", fake ? "bg-risk-high" : "bg-risk-low")} />
                       {r}
                     </li>

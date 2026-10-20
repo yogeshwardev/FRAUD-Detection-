@@ -8,36 +8,43 @@ export default {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
+        // canvas / surfaces (dark values; light handled in CSS)
         bg: {
-          DEFAULT: "#0B0F19",
-          soft: "#0F1424",
+          DEFAULT: "#0B1120",
+          soft: "#111a2e",
         },
-        glass: "rgba(255,255,255,0.04)",
+        // corporate accent — indigo primary, blue secondary
         accent: {
-          violet: "#8B5CF6",
-          cyan: "#22D3EE",
+          violet: "#4f46e5", // indigo-600 (primary)
+          cyan: "#2563eb", // blue-600 (secondary)
+        },
+        brand: {
+          50: "#eef2ff",
+          100: "#e0e7ff",
+          500: "#6366f1",
+          600: "#4f46e5",
+          700: "#4338ca",
         },
         risk: {
-          low: "#34D399",
-          med: "#FBBF24",
-          high: "#FB7185",
+          low: "#16a34a",
+          med: "#d97706",
+          high: "#dc2626",
         },
       },
       backgroundImage: {
-        "accent-gradient": "linear-gradient(135deg,#8B5CF6 0%,#22D3EE 100%)",
-        "accent-soft": "linear-gradient(135deg,rgba(139,92,246,0.18),rgba(34,211,238,0.18))",
+        "accent-gradient": "linear-gradient(135deg,#4f46e5 0%,#2563eb 100%)",
+        "accent-soft": "linear-gradient(135deg,rgba(79,70,229,0.12),rgba(37,99,235,0.12))",
       },
       boxShadow: {
-        glass: "0 8px 32px rgba(0,0,0,0.30)",
-        glow: "0 0 24px rgba(139,92,246,0.25)",
+        glow: "0 8px 20px rgba(79,70,229,0.22)",
+        glass: "0 1px 2px rgba(16,24,40,0.04), 0 4px 16px rgba(16,24,40,0.06)",
+        card: "0 1px 2px rgba(16,24,40,0.05), 0 1px 3px rgba(16,24,40,0.08)",
       },
       borderRadius: {
-        "2xl": "1rem",
+        "2xl": "0.9rem",
       },
       keyframes: {
-        shimmer: {
-          "100%": { transform: "translateX(100%)" },
-        },
+        shimmer: { "100%": { transform: "translateX(100%)" } },
         float: {
           "0%,100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-12px)" },

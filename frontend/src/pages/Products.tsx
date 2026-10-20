@@ -34,15 +34,15 @@ export function Products() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Product Trust & Risk Explorer</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           Every product carries a Bayesian trust score with a confidence level and a calibrated risk probability.
         </p>
       </div>
 
       {/* controls */}
       <div className="glass flex flex-col gap-3 p-4 md:flex-row md:items-center">
-        <div className="flex flex-1 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-          <Search className="h-4 w-4 text-slate-400" />
+        <div className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+          <Search className="h-4 w-4 text-slate-500" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -57,7 +57,7 @@ export function Products() {
               onClick={() => setCategory(c)}
               className={cn(
                 "rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                category === c ? "bg-accent-gradient text-white" : "border border-white/10 text-slate-400 hover:bg-white/5",
+                category === c ? "bg-accent-gradient text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50",
               )}
             >
               {c || "All"}
@@ -67,7 +67,7 @@ export function Products() {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="rounded-xl border border-white/10 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:bg-bg-soft dark:text-slate-200"
+          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:bg-bg-soft dark:text-slate-700"
         >
           {SORTS.map((s) => (
             <option key={s.v} value={s.v}>
@@ -115,7 +115,7 @@ export function Products() {
                         <span className="text-sm text-slate-500">/100</span>
                       </p>
                     </div>
-                    <div className="text-right text-xs text-slate-400">
+                    <div className="text-right text-xs text-slate-500">
                       <p className="flex items-center justify-end gap-1">
                         <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                         {p.seller_rating} seller
@@ -125,7 +125,7 @@ export function Products() {
                     </div>
                   </div>
 
-                  <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                     <div className="h-full rounded-full transition-all" style={{ width: `${p.trust}%`, background: trustHex(p.trust) }} />
                   </div>
                   <p className="mt-2 flex items-center gap-1 text-[11px] text-slate-500">

@@ -29,14 +29,14 @@ export function FraudDetail() {
 
   return (
     <div className="space-y-6">
-      <Link to="/fraud" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200">
+      <Link to="/fraud" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700">
         <ArrowLeft className="h-4 w-4" /> Back to users
       </Link>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{u.name}</h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             Account age {u.account_age_days}d · {u.total_orders} orders · {u.total_returns} returns · {u.coupon_uses} coupons
           </p>
         </div>
@@ -70,19 +70,19 @@ export function FraudDetail() {
               {s.patterns.map((p) => (
                 <div key={p.name} className="rounded-xl bg-risk-high/10 p-3 ring-1 ring-inset ring-risk-high/25">
                   <p className="text-sm font-semibold text-risk-high">{p.name}</p>
-                  <p className="mt-0.5 text-xs text-slate-300">{p.evidence}</p>
+                  <p className="mt-0.5 text-xs text-slate-600">{p.evidence}</p>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="rounded-xl bg-risk-low/10 p-4 text-sm text-slate-300 ring-1 ring-inset ring-risk-low/25">
+            <div className="rounded-xl bg-risk-low/10 p-4 text-sm text-slate-600 ring-1 ring-inset ring-risk-low/25">
               No strong fraud patterns triggered — this user behaves within normal ranges.
             </div>
           )}
 
           {/* timeline */}
           <div className="mt-4">
-            <p className="mb-2 text-xs font-medium text-slate-400">Order & return timeline</p>
+            <p className="mb-2 text-xs font-medium text-slate-500">Order & return timeline</p>
             <ResponsiveContainer width="100%" height={150}>
               <AreaChart data={data.timeline} margin={{ left: -20, right: 6, top: 4 }}>
                 <defs>
@@ -113,7 +113,7 @@ export function FraudDetail() {
         {data.linked_accounts.length ? (
           <NetworkGraph center={u.name} nodes={data.linked_accounts} />
         ) : (
-          <p className="rounded-xl bg-white/5 p-4 text-sm text-slate-400">
+          <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
             <Users className="mr-2 inline h-4 w-4" /> No other accounts share this device or address.
           </p>
         )}
@@ -124,7 +124,7 @@ export function FraudDetail() {
         <h3 className="mb-3 font-semibold">Recent Orders</h3>
         <div className="max-h-80 space-y-1.5 overflow-y-auto pr-1">
           {data.orders.slice(-30).reverse().map((o) => (
-            <div key={o.id} className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2 text-sm">
+            <div key={o.id} className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2 text-sm">
               <span className="min-w-0 flex-1 truncate">{o.product}</span>
               <span className="hidden text-xs text-slate-500 sm:block">{o.payment_mode}</span>
               <span className="text-xs text-slate-500">{o.timestamp.slice(0, 10)}</span>
@@ -184,7 +184,7 @@ function NetworkGraph({
           {center.split(" ")[0]}
         </text>
       </svg>
-      <div className="mt-2 flex flex-wrap gap-4 text-[11px] text-slate-400">
+      <div className="mt-2 flex flex-wrap gap-4 text-[11px] text-slate-500">
         <span className="flex items-center gap-1.5"><span className="h-0.5 w-5 bg-accent-violet" /> shared device</span>
         <span className="flex items-center gap-1.5"><span className="h-0.5 w-5 bg-accent-cyan" /> shared address</span>
       </div>
@@ -194,7 +194,7 @@ function NetworkGraph({
 
 function Mini({ label, value, tip }: { label: string; value: string; tip?: string }) {
   return (
-    <div className="rounded-xl bg-white/5 p-2">
+    <div className="rounded-xl bg-slate-50 p-2">
       <p className="text-base font-semibold tabular-nums">{value}</p>
       <p className="flex items-center justify-center gap-1 text-[10px] text-slate-500">
         {label}

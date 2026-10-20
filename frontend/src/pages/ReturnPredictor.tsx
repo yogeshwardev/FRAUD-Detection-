@@ -58,7 +58,7 @@ export function ReturnPredictor() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Return Risk Predictor</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           Score a hypothetical order live. The model returns a calibrated probability, the driving factors and a recommended action.
         </p>
       </div>
@@ -77,7 +77,7 @@ export function ReturnPredictor() {
                 <button
                   key={c}
                   onClick={() => set("category", c)}
-                  className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition", form.category === c ? "bg-accent-gradient text-white" : "border border-white/10 text-slate-400 hover:bg-white/5")}
+                  className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition", form.category === c ? "bg-accent-gradient text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50")}
                 >
                   {c}
                 </button>
@@ -96,7 +96,7 @@ export function ReturnPredictor() {
           <Field label="Payment mode" tip="Cash-on-delivery orders are returned more often than prepaid.">
             <div className="flex gap-1.5">
               {["Prepaid", "COD"].map((m) => (
-                <button key={m} onClick={() => set("payment_mode", m)} className={cn("flex-1 rounded-lg px-3 py-2 text-sm font-medium transition", form.payment_mode === m ? "bg-accent-gradient text-white" : "border border-white/10 text-slate-400 hover:bg-white/5")}>
+                <button key={m} onClick={() => set("payment_mode", m)} className={cn("flex-1 rounded-lg px-3 py-2 text-sm font-medium transition", form.payment_mode === m ? "bg-accent-gradient text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50")}>
                   {m}
                 </button>
               ))}
@@ -111,7 +111,7 @@ export function ReturnPredictor() {
             <select
               value={form.user_id ?? ""}
               onChange={(e) => set("user_id", e.target.value ? +e.target.value : undefined)}
-              className="w-full rounded-xl border border-white/10 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:bg-bg-soft dark:text-slate-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:bg-bg-soft dark:text-slate-700"
             >
               <option value="">New customer (no history)</option>
               {customers.map((c) => (
@@ -141,7 +141,7 @@ export function ReturnPredictor() {
         <div className="lg:col-span-3">
           {!result ? (
             <Card className="grid h-full min-h-[360px] place-items-center text-center">
-              <div className="max-w-xs text-slate-400">
+              <div className="max-w-xs text-slate-500">
                 <Truck className="mx-auto mb-3 h-10 w-10 text-slate-600" />
                 <p className="text-sm">Fill the form and hit <b>Predict</b>, or load an example to see a live return-risk assessment.</p>
               </div>
@@ -167,10 +167,10 @@ export function ReturnPredictor() {
                       return (
                         <div key={f.factor}>
                           <div className="mb-1 flex justify-between text-xs">
-                            <span className="text-slate-400">{f.factor}</span>
+                            <span className="text-slate-500">{f.factor}</span>
                             <span className={up ? "text-risk-high" : "text-risk-low"}>{up ? "↑" : "↓"} {Math.abs(f.impact).toFixed(2)}</span>
                           </div>
-                          <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
                             <div className="h-full rounded-full" style={{ width: `${(Math.abs(f.impact) / maxImpact) * 100}%`, background: up ? "#FB7185" : "#34D399" }} />
                           </div>
                         </div>
@@ -200,7 +200,7 @@ export function ReturnPredictor() {
 function Field({ label, tip, children }: { label: string; tip?: string; children: React.ReactNode }) {
   return (
     <div className="mb-4">
-      <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-400">
+      <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-500">
         {label}
         {tip && <InfoTip text={tip} />}
       </label>

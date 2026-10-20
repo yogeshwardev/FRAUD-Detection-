@@ -88,8 +88,8 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             exit={{ scale: 0.96, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
-              <Search className="h-4 w-4 text-slate-400" />
+            <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3">
+              <Search className="h-4 w-4 text-slate-500" />
               <input
                 ref={inputRef}
                 value={q}
@@ -98,7 +98,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                 className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500"
                 onKeyDown={(e) => e.key === "Escape" && onClose()}
               />
-              <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-slate-400">ESC</kbd>
+              <kbd className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">ESC</kbd>
             </div>
             <div className="max-h-[52vh] overflow-y-auto p-2">
               <Group label="Pages">
@@ -172,9 +172,9 @@ function Row({
   return (
     <button
       onClick={onClick}
-      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-white/5"
+      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-slate-50"
     >
-      <span className="text-slate-400 group-hover:text-accent-cyan">{icon}</span>
+      <span className="text-slate-500 group-hover:text-accent-cyan">{icon}</span>
       <span className="flex-1 truncate">{children}</span>
       {hint && <span className="text-xs text-slate-500">{hint}</span>}
       <CornerDownLeft className="h-3.5 w-3.5 text-slate-600 opacity-0 group-hover:opacity-100" />

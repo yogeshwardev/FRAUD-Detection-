@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+}
+html.dark {
   color-scheme: dark;
 }
 
@@ -12,97 +15,81 @@ body,
   height: 100%;
 }
 
+/* ------------------------------------------------- canvas (light default) */
 body {
-  @apply bg-bg text-slate-200 font-sans antialiased;
-  background-image:
-    radial-gradient(1200px 600px at 15% -10%, rgba(139, 92, 246, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 95% 0%, rgba(34, 211, 238, 0.12), transparent 55%);
-  background-attachment: fixed;
+  @apply font-sans antialiased text-slate-600;
+  background-color: #f4f6f9;
+}
+html.dark body {
+  @apply text-slate-300;
+  background-color: #0b1120;
 }
 
-html:not(.dark) body {
-  @apply bg-slate-50 text-slate-800;
-  background-image:
-    radial-gradient(1200px 600px at 15% -10%, rgba(139, 92, 246, 0.12), transparent 60%),
-    radial-gradient(900px 500px at 95% 0%, rgba(34, 211, 238, 0.12), transparent 55%);
+h1,
+h2,
+h3,
+h4 {
+  color: #0f172a;
+}
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4 {
+  color: #f1f5f9;
 }
 
-/* ---------------------------------------------------------- surfaces */
+/* ------------------------------------------------------------- surfaces */
+/* .glass is the shared card primitive (name kept for compatibility):
+   clean white corporate card in light, deep slate in dark. No blur/neon. */
 .glass {
-  @apply border rounded-2xl backdrop-blur-xl;
-  background: rgba(255, 255, 255, 0.045);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  @apply rounded-2xl border;
+  background: #ffffff;
+  border-color: #e6e9ef;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
 }
-html:not(.dark) .glass {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+html.dark .glass {
+  background: #111a2e;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* lift on hover for interactive cards */
 .hover-lift {
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s,
-    border-color 0.25s;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s, border-color 0.2s;
 }
 .hover-lift:hover {
-  transform: translateY(-3px);
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 16px 48px rgba(139, 92, 246, 0.18);
+  transform: translateY(-2px);
+  border-color: #c7cbff;
+  box-shadow: 0 10px 28px rgba(79, 70, 229, 0.12);
+}
+html.dark .hover-lift:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* ---------------------------------------------------------- text */
+/* ---------------------------------------------------------------- text */
 .gradient-text {
-  background: linear-gradient(110deg, #c4b5fd 0%, #a78bfa 35%, #67e8f9 100%);
+  background: linear-gradient(110deg, #4f46e5 0%, #2563eb 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 2px 16px rgba(139, 92, 246, 0.35));
 }
-html:not(.dark) .gradient-text {
-  background: linear-gradient(110deg, #7c3aed 0%, #6d28d9 35%, #0891b2 100%);
+html.dark .gradient-text {
+  background: linear-gradient(110deg, #818cf8 0%, #38bdf8 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
 
-/* ---------------------------------------------------------- decorative */
-.bg-grid {
-  background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-  background-size: 44px 44px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 55%, transparent 100%);
-}
-
-/* animated gradient border */
-.sheen {
-  position: relative;
-  overflow: hidden;
-}
-.sheen::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
-  transform: translateX(-120%);
-  transition: transform 0.7s;
-}
-.sheen:hover::after {
-  transform: translateX(120%);
-}
-
-/* custom scrollbar */
+/* ------------------------------------------------------------- scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.35);
+  background: rgba(100, 116, 139, 0.35);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.55);
+  background: rgba(100, 116, 139, 0.55);
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -112,65 +99,68 @@ html:not(.dark) .gradient-text {
   font-variant-numeric: tabular-nums;
 }
 
-/* range slider polish */
+/* --------------------------------------------------------------- slider */
 input[type="range"] {
   height: 6px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: #e2e8f0;
   appearance: none;
   outline: none;
+}
+html.dark input[type="range"] {
+  background: rgba(255, 255, 255, 0.12);
 }
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #8b5cf6, #22d3ee);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18);
+  background: #4f46e5;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px #c7cbff, 0 1px 2px rgba(16, 24, 40, 0.2);
   cursor: pointer;
   transition: transform 0.15s;
 }
+html.dark input[type="range"]::-webkit-slider-thumb {
+  border-color: #111a2e;
+}
 input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
+  transform: scale(1.12);
 }
 
-/* ---------------------------------------------------------- focus */
+/* --------------------------------------------------------------- focus */
 a:focus-visible,
 button:focus-visible,
 select:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(11, 15, 25, 1), 0 0 0 4px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(79, 70, 229, 0.5);
   border-radius: 0.6rem;
 }
-html:not(.dark) a:focus-visible,
-html:not(.dark) button:focus-visible,
-html:not(.dark) select:focus-visible,
-html:not(.dark) input:focus-visible,
-html:not(.dark) textarea:focus-visible {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(124, 58, 237, 0.55);
+html.dark a:focus-visible,
+html.dark button:focus-visible,
+html.dark select:focus-visible,
+html.dark input:focus-visible,
+html.dark textarea:focus-visible {
+  box-shadow: 0 0 0 2px #0b1120, 0 0 0 4px rgba(99, 102, 241, 0.6);
 }
 
-/* ----------------------------------------------- light-mode refinements
-   Components are authored dark-first; these raise contrast and convert the
-   translucent-white surfaces to subtle dark-on-light so the light theme reads
-   as a clean, professional dashboard. Higher specificity wins over utilities. */
-html:not(.dark) .text-slate-200 { color: #1e293b; }
-html:not(.dark) .text-slate-300 { color: #334155; }
-html:not(.dark) .text-slate-400 { color: #475569; }
-html:not(.dark) .text-slate-500 { color: #64748b; }
-html:not(.dark) .text-slate-600 { color: #94a3b8; }
+/* -------------------------------------------------- dark-mode text/surface
+   Components are authored light-first; restore readable values in dark. */
+html.dark .text-slate-700 { color: #cbd5e1; }
+html.dark .text-slate-600 { color: #cbd5e1; }
+html.dark .text-slate-500 { color: #94a3b8; }
+html.dark .text-slate-400 { color: #94a3b8; }
+html.dark .text-slate-900 { color: #f1f5f9; }
+html.dark .text-slate-800 { color: #e2e8f0; }
 
-html:not(.dark) .bg-white\/5 { background-color: rgba(15, 23, 42, 0.04); }
-html:not(.dark) .bg-white\/10 { background-color: rgba(15, 23, 42, 0.07); }
-html:not(.dark) .hover\:bg-white\/5:hover { background-color: rgba(15, 23, 42, 0.05); }
-html:not(.dark) .hover\:bg-white\/10:hover { background-color: rgba(15, 23, 42, 0.08); }
-html:not(.dark) .border-white\/5 { border-color: rgba(15, 23, 42, 0.06); }
-html:not(.dark) .border-white\/10 { border-color: rgba(15, 23, 42, 0.1); }
-html:not(.dark) .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
-  border-color: rgba(15, 23, 42, 0.07);
-}
-html:not(.dark) .ring-white\/10 { --tw-ring-color: rgba(15, 23, 42, 0.1); }
-html:not(.dark) .bg-accent-soft { background-image: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(34,211,238,0.1)); }
-html:not(.dark) kbd { color: #475569; }
+html.dark .bg-slate-50 { background-color: rgba(255, 255, 255, 0.04); }
+html.dark .bg-slate-100 { background-color: rgba(255, 255, 255, 0.06); }
+html.dark .hover\:bg-slate-50:hover { background-color: rgba(255, 255, 255, 0.05); }
+html.dark .hover\:bg-slate-100:hover { background-color: rgba(255, 255, 255, 0.07); }
+html.dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.1); }
+html.dark .border-slate-100 { border-color: rgba(255, 255, 255, 0.07); }
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255, 255, 255, 0.07); }
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255, 255, 255, 0.08); }
+html.dark .ring-slate-200 { --tw-ring-color: rgba(255, 255, 255, 0.1); }

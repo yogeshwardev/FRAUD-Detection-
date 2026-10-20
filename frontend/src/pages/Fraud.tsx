@@ -26,14 +26,14 @@ export function Fraud() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Fraud User Detection</h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           Isolation Forest anomaly scores fused with a calibrated logistic model yield a probability of fraud per user.
         </p>
       </div>
 
       <div className="glass flex flex-col gap-3 p-4 md:flex-row md:items-center">
-        <div className="flex flex-1 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-          <Search className="h-4 w-4 text-slate-400" />
+        <div className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+          <Search className="h-4 w-4 text-slate-500" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search users…" className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500" />
         </div>
         <div className="flex gap-1.5">
@@ -41,7 +41,7 @@ export function Fraud() {
             <button
               key={t || "all"}
               onClick={() => setFilter(t)}
-              className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition", filter === t ? "bg-accent-gradient text-white" : "border border-white/10 text-slate-400 hover:bg-white/5")}
+              className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition", filter === t ? "bg-accent-gradient text-white" : "border border-slate-200 text-slate-500 hover:bg-slate-50")}
             >
               {t || "All"} {t && "tier"}
             </button>
@@ -58,10 +58,10 @@ export function Fraud() {
       ) : !data?.items.length ? (
         <EmptyState title="No users match" hint="Try a different tier or search." />
       ) : (
-        <div className="glass divide-y divide-white/5 overflow-hidden p-0">
+        <div className="glass divide-y divide-slate-100 overflow-hidden p-0">
           {data.items.map((u, i) => (
             <motion.div key={u.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(i * 0.015, 0.25) }}>
-              <Link to={`/fraud/${u.id}`} className="flex items-center gap-4 px-4 py-3 transition hover:bg-white/5">
+              <Link to={`/fraud/${u.id}`} className="flex items-center gap-4 px-4 py-3 transition hover:bg-slate-50">
                 <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent-cyan">
                   <ShieldAlert className="h-5 w-5" />
                 </div>
@@ -73,11 +73,11 @@ export function Fraud() {
                   </p>
                 </div>
                 <div className="hidden w-40 sm:block">
-                  <div className="mb-1 flex justify-between text-[11px] text-slate-400">
+                  <div className="mb-1 flex justify-between text-[11px] text-slate-500">
                     <span>fraud</span>
                     <span className="tabular-nums">{(u.fraud_prob * 100).toFixed(0)}%</span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
                     <div className="h-full rounded-full" style={{ width: `${u.fraud_prob * 100}%`, background: tier(u.tier).hex }} />
                   </div>
                 </div>

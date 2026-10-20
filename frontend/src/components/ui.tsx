@@ -54,7 +54,7 @@ export function SectionTitle({
         )}
         <div>
           <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-          {subtitle && <p className="text-sm text-slate-400">{subtitle}</p>}
+          {subtitle && <p className="text-sm text-slate-500">{subtitle}</p>}
         </div>
       </div>
       {right}
@@ -72,8 +72,8 @@ export function Button({
   const styles = {
     primary:
       "bg-accent-gradient text-white shadow-glow hover:opacity-90 disabled:opacity-50",
-    ghost: "hover:bg-white/5 text-slate-300",
-    outline: "border border-white/10 hover:bg-white/5 text-slate-200",
+    ghost: "hover:bg-slate-50 text-slate-600",
+    outline: "border border-slate-200 hover:bg-slate-50 text-slate-700",
   }[variant];
   return (
     <button
@@ -108,7 +108,7 @@ export function Badge({
 
 export function Progress({
   value,
-  tone = "#8B5CF6",
+  tone = "#4f46e5",
   className,
 }: {
   value: number; // 0..1
@@ -116,7 +116,7 @@ export function Progress({
   className?: string;
 }) {
   return (
-    <div className={cn("h-2 w-full overflow-hidden rounded-full bg-white/10", className)}>
+    <div className={cn("h-2 w-full overflow-hidden rounded-full bg-slate-100", className)}>
       <motion.div
         className="h-full rounded-full"
         style={{ background: tone }}
@@ -130,8 +130,8 @@ export function Progress({
 
 export function Skeleton({ className }: { className?: string }) {
   return (
-    <div className={cn("relative overflow-hidden rounded-xl bg-white/5", className)}>
-      <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    <div className={cn("relative overflow-hidden rounded-xl bg-slate-50", className)}>
+      <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-slate-200/80 to-transparent dark:via-white/10" />
     </div>
   );
 }
@@ -152,7 +152,7 @@ export function InfoTip({ text }: { text: string }) {
         <HelpCircle className="h-3.5 w-3.5" />
       </button>
       {open && (
-        <span className="glass absolute bottom-full left-1/2 z-50 mb-2 w-56 -translate-x-1/2 p-2.5 text-xs leading-relaxed text-slate-300 shadow-glass">
+        <span className="glass absolute bottom-full left-1/2 z-50 mb-2 w-56 -translate-x-1/2 p-2.5 text-xs leading-relaxed text-slate-600 shadow-glass">
           {text}
         </span>
       )}
@@ -162,8 +162,8 @@ export function InfoTip({ text }: { text: string }) {
 
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {
   return (
-    <div className="grid place-items-center rounded-2xl border border-dashed border-white/10 py-14 text-center">
-      <p className="text-sm font-medium text-slate-300">{title}</p>
+    <div className="grid place-items-center rounded-2xl border border-dashed border-slate-200 py-14 text-center">
+      <p className="text-sm font-medium text-slate-600">{title}</p>
       {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
     </div>
   );
@@ -171,6 +171,6 @@ export function EmptyState({ title, hint }: { title: string; hint?: string }) {
 
 export function Spinner() {
   return (
-    <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-accent-cyan" />
+    <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-200 border-t-accent-violet dark:border-white/20" />
   );
 }

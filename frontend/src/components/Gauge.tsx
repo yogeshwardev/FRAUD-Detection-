@@ -13,7 +13,7 @@ export function Gauge({
   label,
   suffix = "",
   color = "#8B5CF6",
-  track = "rgba(255,255,255,0.08)",
+  track = "rgba(100,116,139,0.18)",
   ticks = true,
 }: {
   value: number;
@@ -86,9 +86,9 @@ export function Gauge({
       <div className="absolute flex flex-col items-center">
         <span className="text-4xl font-bold tabular-nums tracking-tight">
           {animated.toFixed(suffix === "%" ? 0 : value % 1 === 0 ? 0 : 1)}
-          <span className="text-xl text-slate-400">{suffix}</span>
+          <span className="text-xl text-slate-500">{suffix}</span>
         </span>
-        {label && <span className="mt-0.5 text-xs text-slate-400">{label}</span>}
+        {label && <span className="mt-0.5 text-xs text-slate-500">{label}</span>}
       </div>
     </div>
   );

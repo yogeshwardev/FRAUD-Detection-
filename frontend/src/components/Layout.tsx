@@ -55,7 +55,7 @@ export function Layout() {
       {/* sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-white/80 backdrop-blur-xl transition-all duration-300 dark:bg-bg-soft/70 md:static",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200 bg-white transition-all duration-300 dark:bg-bg-soft md:static",
           collapsed ? "w-[76px]" : "w-64",
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
@@ -66,8 +66,8 @@ export function Layout() {
           </div>
           {!collapsed && (
             <div className="leading-tight">
-              <p className="font-bold tracking-tight">TrustLens</p>
-              <p className="text-[10px] text-slate-400">Risk Intelligence</p>
+              <p className="font-bold tracking-tight text-slate-900">TrustLens</p>
+              <p className="text-[10px] text-slate-500">Risk Intelligence</p>
             </div>
           )}
         </div>
@@ -82,7 +82,7 @@ export function Layout() {
                   "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition",
                   isActive
                     ? "text-slate-900 dark:text-white"
-                    : "text-slate-400 hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-200",
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:hover:text-slate-700",
                 )
               }
             >
@@ -104,7 +104,7 @@ export function Layout() {
 
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className="m-3 hidden items-center justify-center gap-2 rounded-xl border border-white/10 py-2 text-xs text-slate-400 hover:bg-white/5 md:flex"
+          className="m-3 hidden items-center justify-center gap-2 rounded-xl border border-slate-200 py-2 text-xs text-slate-500 hover:bg-slate-50 md:flex"
         >
           <ChevronLeft className={cn("h-4 w-4 transition", collapsed && "rotate-180")} />
           {!collapsed && "Collapse"}
@@ -117,22 +117,22 @@ export function Layout() {
 
       {/* main */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-white/10 bg-white/75 px-4 backdrop-blur-xl dark:bg-bg/60 md:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-slate-200 bg-white px-4 dark:bg-bg-soft md:px-6">
           <button className="md:hidden" onClick={() => setMobileOpen(true)}>
             <Menu className="h-5 w-5" />
           </button>
           <button
             onClick={() => setPaletteOpen(true)}
-            className="group flex flex-1 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-400 hover:bg-white/10 md:max-w-sm"
+            className="group flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 hover:bg-slate-100 md:max-w-sm"
           >
             <Search className="h-4 w-4" />
             <span className="flex-1 text-left">Search products, users, pages…</span>
-            <kbd className="hidden rounded bg-white/10 px-1.5 py-0.5 text-[10px] sm:block">Ctrl K</kbd>
+            <kbd className="hidden rounded bg-slate-100 px-1.5 py-0.5 text-[10px] sm:block">Ctrl K</kbd>
           </button>
           <div className="flex-1" />
           <button
             onClick={toggle}
-            className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 hover:bg-white/5"
+            className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 hover:bg-slate-50"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -143,10 +143,10 @@ export function Layout() {
           <Outlet />
         </main>
 
-        <footer className="border-t border-white/10 px-4 py-6 md:px-6">
+        <footer className="border-t border-slate-200 px-4 py-6 md:px-6">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 text-xs text-slate-500 sm:flex-row">
             <p>
-              <span className="font-semibold text-slate-400">TrustLens</span> · Intelligent Consumer
+              <span className="font-semibold text-slate-500">TrustLens</span> · Intelligent Consumer
               Trust &amp; Product Risk Assessment
             </p>
             <p>Probabilistic Machine Learning · Final Year Project</p>
