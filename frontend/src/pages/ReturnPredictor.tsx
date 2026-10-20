@@ -111,7 +111,7 @@ export function ReturnPredictor() {
             <select
               value={form.user_id ?? ""}
               onChange={(e) => set("user_id", e.target.value ? +e.target.value : undefined)}
-              className="w-full rounded-xl border border-white/10 bg-bg-soft px-3 py-2 text-sm outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:bg-bg-soft dark:text-slate-200"
             >
               <option value="">New customer (no history)</option>
               {customers.map((c) => (

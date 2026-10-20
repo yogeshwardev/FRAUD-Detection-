@@ -67,7 +67,7 @@ export function Products() {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="rounded-xl border border-white/10 bg-bg-soft px-3 py-2 text-sm outline-none"
+          className="rounded-xl border border-white/10 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:bg-bg-soft dark:text-slate-200"
         >
           {SORTS.map((s) => (
             <option key={s.v} value={s.v}>

@@ -55,7 +55,7 @@ export function Layout() {
       {/* sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-bg-soft/70 backdrop-blur-xl transition-all duration-300 md:static",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-white/80 backdrop-blur-xl transition-all duration-300 dark:bg-bg-soft/70 md:static",
           collapsed ? "w-[76px]" : "w-64",
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
@@ -80,7 +80,9 @@ export function Layout() {
               className={({ isActive }) =>
                 cn(
                   "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition",
-                  isActive ? "text-white" : "text-slate-400 hover:text-slate-200 hover:bg-white/5",
+                  isActive
+                    ? "text-slate-900 dark:text-white"
+                    : "text-slate-400 hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-200",
                 )
               }
             >
@@ -115,7 +117,7 @@ export function Layout() {
 
       {/* main */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-white/10 bg-bg/60 px-4 backdrop-blur-xl md:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-white/10 bg-white/75 px-4 backdrop-blur-xl dark:bg-bg/60 md:px-6">
           <button className="md:hidden" onClick={() => setMobileOpen(true)}>
             <Menu className="h-5 w-5" />
           </button>
@@ -140,6 +142,16 @@ export function Layout() {
         <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6 md:py-8">
           <Outlet />
         </main>
+
+        <footer className="border-t border-white/10 px-4 py-6 md:px-6">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 text-xs text-slate-500 sm:flex-row">
+            <p>
+              <span className="font-semibold text-slate-400">TrustLens</span> · Intelligent Consumer
+              Trust &amp; Product Risk Assessment
+            </p>
+            <p>Probabilistic Machine Learning · Final Year Project</p>
+          </div>
+        </footer>
       </div>
 
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />

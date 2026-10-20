@@ -133,3 +133,44 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
 }
+
+/* ---------------------------------------------------------- focus */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(11, 15, 25, 1), 0 0 0 4px rgba(139, 92, 246, 0.6);
+  border-radius: 0.6rem;
+}
+html:not(.dark) a:focus-visible,
+html:not(.dark) button:focus-visible,
+html:not(.dark) select:focus-visible,
+html:not(.dark) input:focus-visible,
+html:not(.dark) textarea:focus-visible {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(124, 58, 237, 0.55);
+}
+
+/* ----------------------------------------------- light-mode refinements
+   Components are authored dark-first; these raise contrast and convert the
+   translucent-white surfaces to subtle dark-on-light so the light theme reads
+   as a clean, professional dashboard. Higher specificity wins over utilities. */
+html:not(.dark) .text-slate-200 { color: #1e293b; }
+html:not(.dark) .text-slate-300 { color: #334155; }
+html:not(.dark) .text-slate-400 { color: #475569; }
+html:not(.dark) .text-slate-500 { color: #64748b; }
+html:not(.dark) .text-slate-600 { color: #94a3b8; }
+
+html:not(.dark) .bg-white\/5 { background-color: rgba(15, 23, 42, 0.04); }
+html:not(.dark) .bg-white\/10 { background-color: rgba(15, 23, 42, 0.07); }
+html:not(.dark) .hover\:bg-white\/5:hover { background-color: rgba(15, 23, 42, 0.05); }
+html:not(.dark) .hover\:bg-white\/10:hover { background-color: rgba(15, 23, 42, 0.08); }
+html:not(.dark) .border-white\/5 { border-color: rgba(15, 23, 42, 0.06); }
+html:not(.dark) .border-white\/10 { border-color: rgba(15, 23, 42, 0.1); }
+html:not(.dark) .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(15, 23, 42, 0.07);
+}
+html:not(.dark) .ring-white\/10 { --tw-ring-color: rgba(15, 23, 42, 0.1); }
+html:not(.dark) .bg-accent-soft { background-image: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(34,211,238,0.1)); }
+html:not(.dark) kbd { color: #475569; }

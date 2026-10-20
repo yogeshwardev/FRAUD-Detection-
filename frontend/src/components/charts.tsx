@@ -6,8 +6,8 @@ export const CHART = {
   low: "#34D399",
   med: "#FBBF24",
   high: "#FB7185",
-  grid: "rgba(148,163,184,0.12)",
-  axis: "rgba(148,163,184,0.6)",
+  grid: "rgba(148,163,184,0.18)",
+  axis: "#64748b", // slate-500 — legible on both light and dark backgrounds
 };
 
 export const TIER_COLORS: Record<string, string> = {
