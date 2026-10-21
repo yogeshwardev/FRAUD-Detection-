@@ -111,14 +111,14 @@ export function StoreLayout() {
             </p>
           </div>
           <FooterCol title="Shop" links={[["All products", "/shop"], ["Fashion", "/shop?category=Fashion"], ["Electronics", "/shop?category=Electronics"], ["Beauty", "/shop?category=Beauty"]]} />
-          <FooterCol title="Intelligence" links={[["Risk Analytics", "/dashboard"], ["Model Performance", "/models"], ["How it works", "/about"], ["Project & team", "/project"]]} />
+          <FooterCol title="Intelligence" links={[["Risk Analytics", "/dashboard"], ["Model Performance", "/models"], ["How it works", "/about"], ["About the project", "/project"]]} />
           <div>
             <p className="mb-3 text-sm font-semibold text-slate-900">Final Year Project</p>
             <p className="text-sm text-slate-500">Intelligent Consumer Trust &amp; Product Risk Assessment Using Probabilistic Machine Learning.</p>
           </div>
         </div>
         <div className="border-t border-slate-100 py-4 text-center text-xs text-slate-400">
-          © {new Date().getFullYear()} TrustLens · Demo storefront for academic purposes.
+          © {new Date().getFullYear()} Jyoshna. All rights reserved.
         </div>
       </footer>
     </div>

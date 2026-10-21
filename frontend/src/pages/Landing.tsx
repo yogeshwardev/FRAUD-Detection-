@@ -185,17 +185,9 @@ export function Landing() {
         </div>
       </section>
 
-      {/* credits */}
-      <section className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="glass grid grid-cols-1 gap-6 p-7 md:grid-cols-3">
-          <Credit label="Submitted by" value="Student Name" hint="Roll No. / Reg. No." />
-          <Credit label="Guided by" value="Guide Name" hint="Designation, Department" />
-          <Credit label="Institution" value="College Name" hint="University · Academic Year" />
-        </div>
-        <p className="mt-4 text-center text-xs text-slate-500">
-          Placeholders above are editable in <code className="text-slate-600">src/pages/Landing.tsx</code>.
-        </p>
-      </section>
+      <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+        © {new Date().getFullYear()} Jyoshna. All rights reserved.
+      </footer>
     </div>
   );
 }
@@ -268,16 +260,6 @@ function PreviewBar({ label, value, color }: { label: string; value: number; col
           transition={{ duration: 1, delay: 0.5 }}
         />
       </div>
-    </div>
-  );
-}
-
-function Credit({ label, value, hint }: { label: string; value: string; hint: string }) {
-  return (
-    <div className="text-center md:text-left">
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-slate-900">{value}</p>
-      <p className="text-sm text-slate-600">{hint}</p>
     </div>
   );
 }

@@ -153,7 +153,7 @@ triggers a real action.
 - **Cart** (`/cart`) — quantities, order summary, savings, place order.
 
 ### Project page (`/project`, linked from the store footer)
-- Project introduction, module cards and editable **student / guide / college credits**.
+- Project introduction and module overview.
 
 ### Risk analytics (`/dashboard`, linked as "Risk Analytics")
 1. **Store** link back to the shop from the top bar.
@@ -251,3 +251,5 @@ jyoshna/
 ---
 
 *Built with probabilistic ML — trust, returns and fraud, with confidence.*
+
+© 2026 Jyoshna. All rights reserved.

@@ -156,7 +156,7 @@ export function Layout() {
               <span className="font-semibold text-slate-500">TrustLens</span> · Intelligent Consumer
               Trust &amp; Product Risk Assessment
             </p>
-            <p>Probabilistic Machine Learning · Final Year Project</p>
+            <p>© {new Date().getFullYear()} Jyoshna. All rights reserved.</p>
           </div>
         </footer>
       </div>
