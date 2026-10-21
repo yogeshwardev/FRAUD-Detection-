@@ -1,7 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { useTheme } from "./components/theme";
 import { Layout } from "./components/Layout";
-import { Landing } from "./pages/Landing";
+import { StoreLayout } from "./components/store/StoreLayout";
+import { StoreHome } from "./pages/store/Home";
+import { Catalog } from "./pages/store/Catalog";
+import { StoreProduct } from "./pages/store/Product";
+import { Cart } from "./pages/store/Cart";
 import { Overview } from "./pages/Overview";
 import { Products } from "./pages/Products";
 import { ProductDetail } from "./pages/ProductDetail";
@@ -15,22 +21,43 @@ import { About } from "./pages/About";
 function Page({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
   );
 }
 
+function ThemeRouteSync() {
+  const { theme } = useTheme();
+  const loc = useLocation();
+  useEffect(() => {
+    const p = loc.pathname;
+    const isStore = p === "/" || p.startsWith("/shop") || p.startsWith("/product") || p.startsWith("/cart");
+    document.documentElement.classList.toggle("dark", !isStore && theme === "dark");
+  }, [theme, loc.pathname]);
+  return null;
+}
+
 export default function App() {
   const loc = useLocation();
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <ThemeRouteSync />
+      <AnimatePresence mode="wait">
       <Routes location={loc} key={loc.pathname}>
-        <Route path="/" element={<Landing />} />
+        {/* Storefront */}
+        <Route element={<StoreLayout />}>
+          <Route path="/" element={<StoreHome />} />
+          <Route path="/shop" element={<Catalog />} />
+          <Route path="/product/:id" element={<StoreProduct />} />
+          <Route path="/cart" element={<Cart />} />
+        </Route>
+
+        {/* Risk analytics (admin) */}
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Page><Overview /></Page>} />
           <Route path="/products" element={<Page><Products /></Page>} />
@@ -43,6 +70,7 @@ export default function App() {
           <Route path="/about" element={<Page><About /></Page>} />
         </Route>
       </Routes>
-    </AnimatePresence>
+      </AnimatePresence>
+    </>
   );
 }

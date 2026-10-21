@@ -11,6 +11,7 @@ import {
   Search,
   ShieldAlert,
   Sun,
+  Store,
   Workflow,
   ShieldCheck,
 } from "lucide-react";
@@ -130,6 +131,12 @@ export function Layout() {
             <kbd className="hidden rounded bg-slate-100 px-1.5 py-0.5 text-[10px] sm:block">Ctrl K</kbd>
           </button>
           <div className="flex-1" />
+          <NavLink
+            to="/"
+            className="mr-1 inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+          >
+            <Store className="h-4 w-4" /> <span className="hidden sm:inline">Store</span>
+          </NavLink>
           <button
             onClick={toggle}
             className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 hover:bg-slate-50"

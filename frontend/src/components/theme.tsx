@@ -13,8 +13,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle("dark", theme === "dark");
+    // Persist only. The dark class is applied route-aware (store is always
+    // light) by ThemeRouteSync inside the router.
     localStorage.setItem("theme", theme);
   }, [theme]);
 
