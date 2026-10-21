@@ -111,7 +111,7 @@ export function StoreLayout() {
             </p>
           </div>
           <FooterCol title="Shop" links={[["All products", "/shop"], ["Fashion", "/shop?category=Fashion"], ["Electronics", "/shop?category=Electronics"], ["Beauty", "/shop?category=Beauty"]]} />
-          <FooterCol title="Intelligence" links={[["Risk Analytics", "/dashboard"], ["Model Performance", "/models"], ["How it works", "/about"]]} />
+          <FooterCol title="Intelligence" links={[["Risk Analytics", "/dashboard"], ["Model Performance", "/models"], ["How it works", "/about"], ["Project & team", "/project"]]} />
           <div>
             <p className="mb-3 text-sm font-semibold text-slate-900">Final Year Project</p>
             <p className="text-sm text-slate-500">Intelligent Consumer Trust &amp; Product Risk Assessment Using Probabilistic Machine Learning.</p>

@@ -34,13 +34,21 @@ def _persist(data: dict[str, pd.DataFrame]) -> None:
         session.close()
 
 
+_BOOL_COLUMNS = {
+    "products": ["is_risky"],
+    "users": ["is_fraud"],
+    "orders": ["returned"],
+    "reviews": ["verified_purchase", "is_fake"],
+}
+
+
 def _load_from_db() -> dict[str, pd.DataFrame]:
-    return {
-        "products": pd.read_sql("SELECT * FROM products", db.engine),
-        "users": pd.read_sql("SELECT * FROM users", db.engine),
-        "orders": pd.read_sql("SELECT * FROM orders", db.engine),
-        "reviews": pd.read_sql("SELECT * FROM reviews", db.engine),
-    }
+    data = {t: pd.read_sql(f"SELECT * FROM {t}", db.engine) for t in _BOOL_COLUMNS}
+    # SQLite stores booleans as 0/1; restore real bools so boolean masks work
+    for table, cols in _BOOL_COLUMNS.items():
+        for c in cols:
+            data[table][c] = data[table][c].astype(bool)
+    return data
 
 
 def ensure_ready(verbose: bool = True) -> None:

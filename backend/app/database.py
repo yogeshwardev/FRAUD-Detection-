@@ -45,12 +45,16 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True)
+    base_id = Column(Integer, index=True, nullable=False)  # real catalogue product
     name = Column(String, nullable=False)
+    brand = Column(String, nullable=False, default="Generic")
+    description = Column(Text, nullable=False, default="")
     category = Column(String, index=True, nullable=False)
     price = Column(Float, nullable=False)
     seller_id = Column(Integer, index=True, nullable=False)
     seller_rating = Column(Float, nullable=False)
     image = Column(String, nullable=False)
+    gallery = Column(Text, nullable=False, default="[]")  # JSON list of image paths
     is_risky = Column(Boolean, default=False)  # ground truth
 
     reviews = relationship("Review", back_populates="product")

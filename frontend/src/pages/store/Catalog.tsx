@@ -22,7 +22,7 @@ export function Catalog() {
   const sort = params.get("sort") || "trust";
   const [limit, setLimit] = useState(48);
 
-  const q = `?search=${encodeURIComponent(search)}&category=${category}&sort=${sort}&limit=${limit}`;
+  const q = `?search=${encodeURIComponent(search)}&category=${category}&sort=${sort}&distinct=true&limit=${limit}`;
   const { data, loading } = useQuery(() => api.products(q), [q]);
 
   const setParam = (key: string, val: string) => {

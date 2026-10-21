@@ -33,7 +33,8 @@ export function ModelPerformance() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Model Performance</h1>
         <p className="text-sm text-slate-500">
-          Held-out evaluation (25% test split). Every classifier is compared against a non-probabilistic baseline.
+          Held-out evaluation (25% test split; 5-fold stratified cross-validation for the 300-listing
+          product-risk model). Every classifier is compared against a non-probabilistic baseline.
         </p>
       </div>
 
@@ -180,7 +181,7 @@ export function ModelPerformance() {
 function pickModels(data: ModelMetrics, tab: string): { primary: Metric; others: Metric[] } {
   if (tab === "fake_review") return { primary: data.fake_review.primary, others: [data.fake_review.baseline] };
   if (tab === "fraud") return { primary: data.fraud.primary, others: [data.fraud.baseline] };
-  if (tab === "product_risk") return { primary: data.product_risk.primary, others: [data.product_risk.gaussian_nb, data.product_risk.baseline] };
+  if (tab === "product_risk") return { primary: data.product_risk.primary, others: [data.product_risk.alternative, data.product_risk.baseline] };
   const r = data.return_risk;
   const primary = r.best === "gaussian_nb" ? r.gaussian_nb : r.logistic;
   const others = r.best === "gaussian_nb" ? [r.logistic, r.baseline] : [r.gaussian_nb, r.baseline];

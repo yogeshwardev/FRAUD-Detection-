@@ -49,9 +49,16 @@ export interface Overview {
 }
 
 export interface ProductListItem {
-  id: number; name: string; category: string; price: number;
-  seller_rating: number; image: string; trust: number; confidence: string;
-  risk_prob: number; risk_tier: string; return_rate: number; n_reviews: number;
+  id: number; base_id: number; name: string; brand: string; category: string;
+  price: number; seller_id: number; seller_rating: number; image: string;
+  trust: number; confidence: string; risk_prob: number; risk_tier: string;
+  return_rate: number; n_reviews: number;
+  offers?: number; // sellers offering this product (distinct listings only)
+}
+
+export interface Offer {
+  id: number; seller_id: number; seller_rating: number; price: number;
+  trust: number; confidence: string; risk_tier: string; current: boolean;
 }
 
 export interface ReviewItem {
@@ -61,9 +68,11 @@ export interface ReviewItem {
 
 export interface ProductDetail {
   product: {
-    id: number; name: string; category: string; price: number;
-    seller_id: number; seller_rating: number; image: string;
+    id: number; base_id: number; name: string; brand: string; description: string;
+    category: string; price: number; seller_id: number; seller_rating: number;
+    image: string; gallery: string[];
   };
+  offers: Offer[];
   scores: {
     trust: number; trust_low: number; trust_high: number; confidence: string;
     naive_rating: number; bayesian_rating: number; n_reviews: number;
@@ -131,7 +140,7 @@ export interface ModelMetrics {
   fake_review: { primary: Metric; baseline: Metric };
   return_risk: { logistic: Metric; gaussian_nb: Metric; baseline: Metric; best: string };
   fraud: { primary: Metric; baseline: Metric };
-  product_risk: { primary: Metric; gaussian_nb: Metric; baseline: Metric };
+  product_risk: { primary: Metric; alternative: Metric; baseline: Metric; best: string };
   comparison: {
     one_order_one_return: {
       user_id: number; naive_return_rate: number; bayes_return_rate: number; explanation: string;

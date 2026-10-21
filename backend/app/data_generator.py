@@ -9,7 +9,12 @@ genuine signal to learn:
 * ~5% of users are fraudulent (wardrobing, shared device/address, review bursts,
   coupon abuse, very high return rates).
 * ~8% of reviews are fake (short, generic, bursty, unverified, extreme rating).
-* ~10% of products are genuinely risky (defect/complaint keywords, high returns).
+* ~10% of listings are genuinely risky (defect/complaint keywords, high returns).
+
+Products are real: titles, brands, descriptions and photos come from a snapshot
+of the open DummyJSON catalogue (``catalog.json``). The 300 "products" are
+listings — a real product sold by a particular seller — so the same item can
+carry different trust/risk from different sellers.
 
 The ground-truth flags are stored in the DB purely because the data is
 synthetic; they become the labels used to train and evaluate the models.
@@ -17,7 +22,9 @@ synthetic; they become the labels used to train and evaluate the models.
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -33,75 +40,109 @@ FRAUD_USER_FRACTION = 0.05
 FAKE_REVIEW_FRACTION = 0.08
 RISKY_PRODUCT_FRACTION = 0.10
 
-CATEGORIES = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Toys"]
+CATEGORIES = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Sports"]
 
-# Base return propensity per category and a typical price band.
+# Base return propensity per category.
 CATEGORY_META = {
-    "Fashion": {"base_return": 0.30, "price": (499, 4999), "sized": True},
-    "Footwear": {"base_return": 0.32, "price": (899, 6999), "sized": True},
-    "Electronics": {"base_return": 0.09, "price": (1499, 69999), "sized": False},
-    "Home": {"base_return": 0.07, "price": (299, 9999), "sized": False},
-    "Beauty": {"base_return": 0.11, "price": (199, 2999), "sized": False},
-    "Toys": {"base_return": 0.08, "price": (199, 3999), "sized": False},
+    "Fashion": {"base_return": 0.30},
+    "Footwear": {"base_return": 0.32},
+    "Electronics": {"base_return": 0.09},
+    "Home": {"base_return": 0.07},
+    "Beauty": {"base_return": 0.11},
+    "Sports": {"base_return": 0.08},
 }
 
-PRODUCT_WORDS = {
-    "Fashion": ["Cotton", "Slim-Fit", "Denim", "Printed", "Linen", "Oversized",
-                "Formal", "Casual", "Embroidered", "Striped"],
-    "Footwear": ["Running", "Canvas", "Leather", "Sports", "Casual", "Formal",
-                 "High-Top", "Trail", "Slip-On", "Chunky"],
-    "Electronics": ["Wireless", "Smart", "4K", "Bluetooth", "Gaming", "Noise-Cancel",
-                    "Fast-Charge", "Portable", "HD", "Pro"],
-    "Home": ["Ceramic", "Non-Stick", "Memory-Foam", "Cordless", "Stainless",
-             "Wooden", "Decor", "Storage", "Compact", "Premium"],
-    "Beauty": ["Matte", "Hydrating", "Vitamin-C", "Organic", "SPF", "Herbal",
-               "Long-Lasting", "Natural", "Glow", "Repair"],
-    "Toys": ["Remote", "Building", "Educational", "Plush", "Wooden", "Puzzle",
-             "Musical", "Action", "DIY", "Learning"],
-}
-PRODUCT_NOUNS = {
-    "Fashion": ["Shirt", "T-Shirt", "Kurta", "Jeans", "Jacket", "Dress", "Trousers"],
-    "Footwear": ["Sneakers", "Sandals", "Loafers", "Boots", "Heels", "Slippers"],
-    "Electronics": ["Headphones", "Speaker", "Smartwatch", "Earbuds", "Monitor",
-                    "Power Bank", "Keyboard"],
-    "Home": ["Cookware Set", "Pillow", "Vacuum", "Bottle", "Lamp", "Organizer",
-             "Bedsheet"],
-    "Beauty": ["Serum", "Lipstick", "Sunscreen", "Face Wash", "Moisturizer",
-               "Shampoo", "Cream"],
-    "Toys": ["Car", "Blocks Set", "Doll", "Puzzle", "Robot", "Board Game"],
-}
+# Real product catalogue (titles, brands, descriptions, photos) snapshotted from
+# the open DummyJSON dataset by scripts/fetch_catalog.py. Each catalogue product
+# can be sold by up to MAX_SELLERS sellers; every (product, seller) pair is one
+# listing, which is the unit the ML models score.
+CATALOG_PATH = Path(__file__).resolve().parent / "catalog.json"
+MAX_SELLERS = 3
+USD_TO_INR = 83
 
-RISK_KEYWORDS = ["broke", "burnt", "leaking", "fake", "stopped working",
-                 "defective", "cheap quality", "fell apart", "dangerous",
-                 "overheated", "damaged", "not working"]
+
+def _inr(value: float) -> float:
+    """Round to a retail-looking rupee price (₹849, ₹12,999 ...)."""
+    if value < 1000:
+        return float(max(99, int(round(value / 50)) * 50 - 1))
+    return float(int(round(value / 100)) * 100 - 1)
 
 SIZE_REASONS = ["Size too small", "Size too large", "Wrong fit", "Not as per size chart"]
 GENERIC_REASONS = ["Changed my mind", "Found cheaper elsewhere", "Late delivery",
                    "Different from picture", "Quality not good", "Damaged on arrival",
                    "Defective product"]
 
-# Review text templates (templated so NLP features are meaningful).
-POS_TEMPLATES = [
-    "Absolutely love this {noun}. The quality is excellent and it fits perfectly.",
-    "Great {noun}, exactly as described. Worth every rupee and delivery was fast.",
-    "Very happy with this purchase. The {noun} feels premium and durable.",
-    "Excellent product, comfortable and well made. Would recommend to friends.",
-    "Good value for money. The material is nice and the colour is just like the photo.",
-    "Impressed with the finish and build. Using it daily and no complaints at all.",
+# Review text is composed from opener + detail + closer pools, so genuine
+# reviews read naturally and rarely repeat, while still carrying the vocabulary
+# the NLP features learn from (praise, defect keywords, generic fake phrasing).
+POS_OPENERS = [
+    "Absolutely love this {noun}.", "Really happy with this {noun}.",
+    "Exceeded my expectations.", "Great purchase overall.",
+    "Very satisfied with this {noun}.", "Totally worth it.",
+    "Bought this after reading the reviews and I'm glad I did.",
+    "Using it for a few weeks now.",
 ]
-NEG_TEMPLATES = [
-    "Very disappointed. The {noun} {kw} within a week, total waste of money.",
-    "Poor quality, it {kw} after two uses. Looks {kw} and nothing like the photos.",
-    "Do not buy. The product {kw} and the seller refused a replacement.",
-    "Terrible experience, item arrived {kw} and {kw} on first use.",
-    "The {noun} is clearly {kw}, it {kw} almost immediately. Returning it.",
+POS_DETAILS = [
+    "The quality is excellent and it feels premium.",
+    "Exactly as described and just like the photos.",
+    "Build quality is solid and it looks great in person.",
+    "Packaging was neat and it arrived in perfect condition.",
+    "Works perfectly for my daily use.",
+    "Feels durable and well made for the price.",
 ]
-NEUTRAL_TEMPLATES = [
-    "The {noun} is okay for the price, nothing special but does the job.",
-    "Average product. Delivery was fine, quality is decent but not great.",
-    "It works as expected. Packaging could be better but overall acceptable.",
-    "Decent {noun}, some minor issues with finish but usable for daily needs.",
+POS_SIZED_DETAILS = [
+    "The fit is perfect and true to size.",
+    "Size chart was accurate and it fits really well.",
+    "Comfortable fit and the material feels great.",
 ]
+POS_CLOSERS = [
+    "Delivery was quick.", "Would definitely recommend.", "Worth every rupee.",
+    "Will buy again from this seller.", "Great value for money.", "",
+]
+NEG_OPENERS = [
+    "Very disappointed with this {noun}.", "Do not buy.", "Terrible experience.",
+    "Complete waste of money.", "Regret buying this {noun}.",
+]
+NEG_VERB_KEYWORDS = ["broke", "stopped working", "fell apart", "overheated",
+                     "burnt out", "started leaking"]
+NEG_ADJ_KEYWORDS = ["defective", "fake", "damaged", "cheap quality", "broken"]
+NEG_VERB_DETAILS = ["It {kw} within a week.", "The {noun} {kw} after just two uses.",
+                    "Mine {kw} on the first day."]
+NEG_ADJ_DETAILS = ["The {noun} arrived {kw}.", "It looks {kw} and nothing like the photos.",
+                   "Received a {kw} piece and the seller refused a replacement."]
+NEG_CLOSERS = ["Returning it.", "Asked for a refund.", "Avoid this seller.",
+               "Not recommended.", ""]
+NEU_OPENERS = ["The {noun} is okay for the price.", "Average product.",
+               "Decent {noun}, nothing special.", "It does the job."]
+NEU_DETAILS = ["Quality could be better.", "Packaging could be improved.",
+               "Some minor issues with the finish.",
+               "Delivery took longer than expected."]
+
+
+def _join(*parts: str) -> str:
+    return " ".join(p for p in parts if p)
+
+
+def _pos_review(rng, noun: str, sized: bool) -> str:
+    detail_pool = POS_SIZED_DETAILS + POS_DETAILS if sized else POS_DETAILS
+    return _join(str(rng.choice(POS_OPENERS)).format(noun=noun),
+                 str(rng.choice(detail_pool)), str(rng.choice(POS_CLOSERS)))
+
+
+def _neg_review(rng, noun: str) -> str:
+    if rng.random() < 0.5:
+        detail = str(rng.choice(NEG_VERB_DETAILS)).format(noun=noun, kw=rng.choice(NEG_VERB_KEYWORDS))
+    else:
+        detail = str(rng.choice(NEG_ADJ_DETAILS)).format(noun=noun, kw=rng.choice(NEG_ADJ_KEYWORDS))
+    extra = ""
+    if rng.random() < 0.5:  # a second defect mention, as angry reviews often have
+        extra = str(rng.choice(NEG_VERB_DETAILS)).format(noun=noun, kw=rng.choice(NEG_VERB_KEYWORDS))
+    return _join(str(rng.choice(NEG_OPENERS)).format(noun=noun), detail, extra,
+                 str(rng.choice(NEG_CLOSERS)))
+
+
+def _neutral_review(rng, noun: str) -> str:
+    return _join(str(rng.choice(NEU_OPENERS)).format(noun=noun), str(rng.choice(NEU_DETAILS)))
 FAKE_TEMPLATES = [
     "Nice product", "Very good", "Awesome!!!", "Best ever", "Super", "Worst",
     "Loved it", "Amazing product good", "Nice nice nice", "Good quality nice",
@@ -139,37 +180,64 @@ def generate() -> dict[str, pd.DataFrame]:
     n_sellers = 45
     seller_rating = {s: round(float(rng.uniform(2.6, 5.0)), 2) for s in range(1, n_sellers + 1)}
 
-    products = []
+    catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+
+    # Every catalogue product gets one listing; the remaining listings go to
+    # randomly chosen products as extra sellers (marketplace-style), capped at
+    # MAX_SELLERS per product.
+    listing_base: list[int] = list(range(len(catalog)))
+    sellers_per = {i: 1 for i in range(len(catalog))}
+    while len(listing_base) < N_PRODUCTS:
+        b = int(rng.integers(0, len(catalog)))
+        if sellers_per[b] < MAX_SELLERS:
+            sellers_per[b] += 1
+            listing_base.append(b)
+    rng.shuffle(listing_base)
+
     risky_ids = set(rng.choice(np.arange(1, N_PRODUCTS + 1),
                                size=int(N_PRODUCTS * RISKY_PRODUCT_FRACTION),
                                replace=False).tolist())
-    # Latent "defect propensity" per product. The is_risky LABEL is a noisy
-    # threshold on this latent, so some risky products behave acceptably and
-    # some ordinary products look shaky — the risk model must infer it from
-    # evidence rather than reading the label straight off the signal.
+    # Latent "defect propensity" per listing. The is_risky LABEL is a noisy
+    # threshold on this latent, so some risky listings behave acceptably and
+    # some ordinary ones look shaky — the risk model must infer it from
+    # evidence rather than reading the label straight off the signal. Risk is
+    # per listing, so the same product can be safe from one seller and risky
+    # (fakes, poor handling) from another.
     prod_neg: dict[int, float] = {}
-    for pid in range(1, N_PRODUCTS + 1):
-        cat = CATEGORIES[rng.integers(0, len(CATEGORIES))]
-        meta = CATEGORY_META[cat]
-        lo, hi = meta["price"]
-        price = round(float(rng.uniform(lo, hi)), 0)
-        name = f"{rng.choice(PRODUCT_WORDS[cat])} {rng.choice(PRODUCT_NOUNS[cat])}"
+    sized_by_pid: dict[int, bool] = {}
+    noun_by_pid: dict[int, str] = {}
+    used_sellers: dict[int, set[int]] = {}
+    products = []
+    for pid, b in enumerate(listing_base, start=1):
+        item = catalog[b]
+        cat = item["category"]
+        taken = used_sellers.setdefault(b, set())
         seller = int(rng.integers(1, n_sellers + 1))
+        while seller in taken:
+            seller = int(rng.integers(1, n_sellers + 1))
+        taken.add(seller)
+
+        price = _inr(item["price_usd"] * USD_TO_INR * float(rng.uniform(0.92, 1.08)))
         is_risky = pid in risky_ids
         neg = 0.12 + (0.45 if is_risky else 0.0) + float(rng.normal(0, 0.14))
         prod_neg[pid] = float(np.clip(neg, 0.03, 0.92))
-        # weaker products tend to have weaker sellers
+        sized_by_pid[pid] = bool(item["sized"])
+        noun_by_pid[pid] = item["noun"]
+        # weaker listings tend to have weaker sellers
         srating = seller_rating[seller]
         if prod_neg[pid] > 0.4:
             srating = round(max(2.3, srating - rng.uniform(0.2, 1.1)), 2)
-        products.append(dict(id=pid, name=name, category=cat, price=price,
-                             seller_id=seller, seller_rating=srating,
-                             image=f"ph:{cat.lower()}-{pid}", is_risky=is_risky))
+        products.append(dict(
+            id=pid, base_id=int(item["source_id"]), name=item["title"],
+            brand=item["brand"], description=item["description"], category=cat,
+            price=price, seller_id=seller, seller_rating=srating,
+            image=item["thumbnail"], gallery=json.dumps(item["gallery"]),
+            is_risky=is_risky))
     products_df = pd.DataFrame(products).set_index("id", drop=False)
 
     # ------------------------------------------------------------------- users
-    # Fraud is deliberately NOT perfectly separable: ~60% of fraudsters are
-    # "hard" (organised rings, fast wardrobing, heavy coupon abuse) and ~40% are
+    # Fraud is deliberately NOT perfectly separable: ~50% of fraudsters are
+    # "hard" (organised rings, fast wardrobing, heavy coupon abuse) and ~50% are
     # "soft" (only one or two weak signals). We also add legitimate households
     # that genuinely share a device/address, so "multi-account" alone must not
     # imply fraud — forcing the model to weigh evidence probabilistically.
@@ -178,7 +246,7 @@ def generate() -> dict[str, pd.DataFrame]:
                                replace=False).tolist())
     fraud_list = sorted(fraud_ids)
     rng.shuffle(fraud_list)
-    n_hard = int(len(fraud_list) * 0.6)
+    n_hard = int(len(fraud_list) * 0.5)
     hard_fraud = set(fraud_list[:n_hard])
     soft_fraud = set(fraud_list[n_hard:])
 
@@ -290,7 +358,7 @@ def generate() -> dict[str, pd.DataFrame]:
         payment = "COD" if rng.random() < cod_prop else "Prepaid"
         delivery = int(np.clip(rng.poisson(4) + 1, 1, 15))
         size = None
-        if meta["sized"]:
+        if sized_by_pid[pid]:
             size = str(rng.choice(["S", "M", "L", "XL", "6", "7", "8", "9", "10"]))
         price = round(float(prod["price"]) * float(rng.uniform(0.9, 1.05)), 0)
 
@@ -301,7 +369,7 @@ def generate() -> dict[str, pd.DataFrame]:
         p += (discount / 100.0) * 0.18          # high discount -> more returns
         if delivery > 7:
             p += 0.06
-        if meta["sized"]:
+        if sized_by_pid[pid]:
             p += 0.07                            # sizing friction
         p += 0.22 * prod_neg[pid]               # weak products are returned more
         p += boost                              # wardrobing / abuse propensity
@@ -313,7 +381,7 @@ def generate() -> dict[str, pd.DataFrame]:
         reason = None
         days_to_return = None
         if returned:
-            if meta["sized"] and rng.random() < 0.6:
+            if sized_by_pid[pid] and rng.random() < 0.6:
                 reason = str(rng.choice(SIZE_REASONS))
             else:
                 reason = str(rng.choice(GENERIC_REASONS))
@@ -349,12 +417,12 @@ def generate() -> dict[str, pd.DataFrame]:
         prod = products_df.loc[pid]
         is_fake = rid in fake_idx or bool(users_df.loc[uid, "is_fraud"] and rng.random() < 0.35)
 
-        noun = prod["name"].split()[-1].lower()
+        noun = noun_by_pid[pid]
         if is_fake:
             if rng.random() < 0.25:
                 # "camouflaged" fake: reads like a real positive review -> overlap
                 rating = int(rng.choice([4, 5], p=[0.3, 0.7]))
-                text = str(rng.choice(POS_TEMPLATES)).format(noun=noun)
+                text = _pos_review(rng, noun, sized_by_pid[pid])
                 verified = rng.random() < 0.35
                 ts, _ = _ts(rng)
             else:
@@ -375,18 +443,13 @@ def generate() -> dict[str, pd.DataFrame]:
                 text = str(rng.choice(FAKE_TEMPLATES))
                 verified = rng.random() < 0.5
             elif rating <= 2:
-                kw = str(rng.choice(RISK_KEYWORDS))
-                kw2 = str(rng.choice(RISK_KEYWORDS))
-                text = str(rng.choice(NEG_TEMPLATES)).format(noun=noun, kw=kw).replace(
-                    "{kw}", kw2)
-                if kw2 not in text:
-                    text = text + f" It {kw2}."
+                text = _neg_review(rng, noun)
                 verified = rng.random() < 0.82
             elif rating == 3:
-                text = str(rng.choice(NEUTRAL_TEMPLATES)).format(noun=noun)
+                text = _neutral_review(rng, noun)
                 verified = rng.random() < 0.82
             else:
-                text = str(rng.choice(POS_TEMPLATES)).format(noun=noun)
+                text = _pos_review(rng, noun, sized_by_pid[pid])
                 verified = rng.random() < 0.82
             ts, _ = _ts(rng)
 

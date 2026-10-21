@@ -7,7 +7,7 @@ import { useToast } from "@/components/toast";
 import { api, type ReturnPrediction, type UserListItem } from "@/lib/api";
 import { cn, fmtInr, tier } from "@/lib/utils";
 
-const CATS = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Toys"];
+const CATS = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Sports"];
 
 interface Form {
   category: string;

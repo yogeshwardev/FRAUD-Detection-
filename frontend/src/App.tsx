@@ -8,6 +8,7 @@ import { StoreHome } from "./pages/store/Home";
 import { Catalog } from "./pages/store/Catalog";
 import { StoreProduct } from "./pages/store/Product";
 import { Cart } from "./pages/store/Cart";
+import { Landing } from "./pages/Landing";
 import { Overview } from "./pages/Overview";
 import { Products } from "./pages/Products";
 import { ProductDetail } from "./pages/ProductDetail";
@@ -56,6 +57,9 @@ export default function App() {
           <Route path="/product/:id" element={<StoreProduct />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
+
+        {/* Project introduction + team credits */}
+        <Route path="/project" element={<Landing />} />
 
         {/* Risk analytics (admin) */}
         <Route element={<Layout />}>

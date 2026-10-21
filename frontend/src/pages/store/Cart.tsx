@@ -52,7 +52,7 @@ export function Cart() {
           {items.map((i) => (
             <div key={i.id} className="flex gap-4 rounded-xl border border-slate-200 bg-white p-3">
               <Link to={`/product/${i.id}`} className="h-24 w-24 shrink-0 overflow-hidden rounded-lg">
-                <ProductImage category={i.category} id={i.id} name={i.name} size={200} className="h-full w-full" />
+                <ProductImage src={i.image} category={i.category} name={i.name} className="h-full w-full border border-slate-100" />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col">
                 <Link to={`/product/${i.id}`} className="line-clamp-1 font-medium text-slate-800 hover:text-slate-900">{i.name}</Link>

@@ -11,4 +11,4 @@ export function pricing(price: number, id: number) {
   return { mrp, discount };
 }
 
-export const CATEGORIES = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Toys"];
+export const CATEGORIES = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Sports"];

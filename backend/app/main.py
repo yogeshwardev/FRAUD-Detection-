@@ -1,6 +1,7 @@
 """FastAPI application exposing the probabilistic risk-assessment platform."""
 from __future__ import annotations
 
+import json
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException, Query
@@ -47,39 +48,59 @@ def overview():
     return {**ov, "dataset": inference.metrics().get("dataset", {})}
 
 
+def _listing_item(p: db.Product, s: dict) -> dict:
+    return {
+        "id": p.id, "base_id": p.base_id, "name": p.name, "brand": p.brand,
+        "category": p.category, "price": p.price, "seller_id": p.seller_id,
+        "seller_rating": p.seller_rating, "image": p.image,
+        "trust": s.get("trust", 50.0), "confidence": s.get("confidence", "Low"),
+        "risk_prob": s.get("risk_prob", 0.0), "risk_tier": s.get("risk_tier", "Low"),
+        "return_rate": s.get("return_rate", 0.0),
+        "n_reviews": s.get("n_reviews", 0),
+    }
+
+
 @app.get("/api/products")
 def list_products(
     search: str = "",
     category: str = "",
     sort: str = Query("risk", enum=["risk", "trust", "return", "price", "name"]),
+    distinct: bool = False,
     limit: int = 60,
     offset: int = 0,
     session: Session = Depends(db.get_session),
 ):
+    """List listings. With ``distinct=true`` (storefront), each real product is
+    returned once — its best listing for the chosen sort — plus an ``offers``
+    count of how many sellers sell it."""
     pscores = inference.scores()["products"]
     q = session.query(db.Product)
     if search:
-        q = q.filter(db.Product.name.ilike(f"%{search}%"))
+        like = f"%{search}%"
+        q = q.filter(or_(db.Product.name.ilike(like), db.Product.brand.ilike(like)))
     if category:
         q = q.filter(db.Product.category == category)
     products = q.all()
 
-    items = []
-    for p in products:
-        s = pscores.get(p.id, {})
-        items.append({
-            "id": p.id, "name": p.name, "category": p.category,
-            "price": p.price, "seller_rating": p.seller_rating, "image": p.image,
-            "trust": s.get("trust", 50.0), "confidence": s.get("confidence", "Low"),
-            "risk_prob": s.get("risk_prob", 0.0), "risk_tier": s.get("risk_tier", "Low"),
-            "return_rate": s.get("return_rate", 0.0),
-            "n_reviews": s.get("n_reviews", 0),
-        })
-
+    items = [_listing_item(p, pscores.get(p.id, {})) for p in products]
     reverse = sort in ("risk", "trust", "return", "price")
     key = {"risk": "risk_prob", "trust": "trust", "return": "return_rate",
            "price": "price", "name": "name"}[sort]
     items.sort(key=lambda x: x[key], reverse=reverse and key != "name")
+
+    if distinct:
+        offers: dict[int, int] = {}
+        for it in items:
+            offers[it["base_id"]] = offers.get(it["base_id"], 0) + 1
+        seen: set[int] = set()
+        grouped = []
+        for it in items:
+            if it["base_id"] in seen:
+                continue
+            seen.add(it["base_id"])
+            grouped.append({**it, "offers": offers[it["base_id"]]})
+        items = grouped
+
     total = len(items)
     return {"total": total, "items": items[offset:offset + limit]}
 
@@ -119,14 +140,30 @@ def product_detail(product_id: int, session: Session = Depends(db.get_session)):
     if not reasons:
         reasons.append("No strong risk signals — metrics are within healthy ranges.")
 
+    # every seller offering this same real product (incl. this listing)
+    pscores = inference.scores()["products"]
+    siblings = (session.query(db.Product)
+                .filter(db.Product.base_id == p.base_id)
+                .order_by(db.Product.price).all())
+    offers = [{
+        "id": o.id, "seller_id": o.seller_id, "seller_rating": o.seller_rating,
+        "price": o.price, "trust": pscores.get(o.id, {}).get("trust", 50.0),
+        "confidence": pscores.get(o.id, {}).get("confidence", "Low"),
+        "risk_tier": pscores.get(o.id, {}).get("risk_tier", "Low"),
+        "current": o.id == p.id,
+    } for o in siblings]
+
     return {
-        "product": {"id": p.id, "name": p.name, "category": p.category,
-                    "price": p.price, "seller_id": p.seller_id,
-                    "seller_rating": p.seller_rating, "image": p.image},
+        "product": {"id": p.id, "base_id": p.base_id, "name": p.name,
+                    "brand": p.brand, "description": p.description,
+                    "category": p.category, "price": p.price,
+                    "seller_id": p.seller_id, "seller_rating": p.seller_rating,
+                    "image": p.image, "gallery": json.loads(p.gallery or "[]")},
         "scores": s,
         "order_count": order_count,
         "reviews": review_items,
         "risk_reasons": reasons,
+        "offers": offers,
     }
 
 

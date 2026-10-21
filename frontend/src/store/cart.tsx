@@ -5,6 +5,7 @@ export interface CartItem {
   name: string;
   price: number;
   category: string;
+  image?: string;
   qty: number;
 }
 
@@ -19,7 +20,8 @@ interface CartCtx {
 }
 
 const Ctx = createContext<CartCtx | null>(null);
-const KEY = "trustlens_cart";
+// v2: listings now map to real catalogue products; drop carts saved before that
+const KEY = "trustlens_cart_v2";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {

@@ -81,7 +81,8 @@ def _return_vector(payload: dict) -> tuple[np.ndarray, dict]:
     size_ratio = ctx["cat_size_complaint_ratio"].get(cat, 0.0)
 
     row = {
-        "price": price, "discount_pct": discount, "delivery_days": delivery,
+        # log-price, matching the training feature (see pipeline._build_return_frame)
+        "price": float(np.log1p(price)), "discount_pct": discount, "delivery_days": delivery,
         "cod": cod, "user_return_rate": user_rr, "product_return_rate": prod_rr,
         "size_complaint_ratio": size_ratio,
     }
@@ -160,7 +161,7 @@ def predict_return(payload: dict) -> dict:
         "tier": tier,
         "action": action,
         "factors": factors,
-        "inputs": {k: row[k] for k in _RETURN_LABELS},
+        "inputs": {**{k: row[k] for k in _RETURN_LABELS}, "price": float(payload["price"])},
     }
 
 

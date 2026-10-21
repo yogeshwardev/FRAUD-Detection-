@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 import { useQuery } from "@/lib/hooks";
 import { cn, fmtInr, tier, trustHex } from "@/lib/utils";
 
-const CATS = ["", "Fashion", "Footwear", "Electronics", "Home", "Beauty", "Toys"];
+const CATS = ["", "Fashion", "Footwear", "Electronics", "Home", "Beauty", "Sports"];
 const SORTS = [
   { v: "risk", l: "Highest risk" },
   { v: "trust", l: "Highest trust" },

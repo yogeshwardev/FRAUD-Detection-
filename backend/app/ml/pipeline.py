@@ -14,7 +14,7 @@ import pandas as pd
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import IsolationForest
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_predict, train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -32,7 +32,7 @@ MODELS_PATH = ARTIFACT_DIR / "models.joblib"
 SCORES_PATH = ARTIFACT_DIR / "scores.joblib"
 METRICS_PATH = ARTIFACT_DIR / "metrics.json"
 
-CATEGORIES = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Toys"]
+CATEGORIES = ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Sports"]
 
 RETURN_NUM = ["price", "discount_pct", "delivery_days", "cod",
               "user_return_rate", "product_return_rate", "size_complaint_ratio"]
@@ -158,7 +158,8 @@ def _build_return_frame(data):
         uid = int(o["user_id"])
         cat = products.loc[pid, "category"]
         row = {
-            "price": float(o["price"]),
+            # prices span ₹99 to ₹1.6 lakh: model log-price (log-normal scale)
+            "price": float(np.log1p(o["price"])),
             "discount_pct": float(o["discount_pct"]),
             "delivery_days": int(o["delivery_days"]),
             "cod": 1 if o["payment_mode"] == "COD" else 0,
@@ -289,18 +290,36 @@ def train_all(data: dict[str, pd.DataFrame]) -> dict:
         })
     Xp = pd.DataFrame(prod_feat_rows)[PRISK_FEATURES]
     yp = products["is_risky"].astype(int).to_numpy()
-    Xp_tr, Xp_te, yp_tr, yp_te = train_test_split(Xp, yp, test_size=0.25,
-                                                  random_state=42, stratify=yp)
-    prisk = _calibrated_lr().fit(Xp_tr.to_numpy(), yp_tr)
-    m_prisk = evaluate(yp_te, prisk.predict_proba(Xp_te.to_numpy())[:, 1])
+    # Only 300 listings (30 risky): a single 25% split would score just ~7
+    # positives, so evaluate with 5-fold stratified out-of-fold predictions.
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    Xn = Xp.to_numpy()
+    m_prisk = evaluate(yp, cross_val_predict(_calibrated_lr(), Xn, yp, cv=skf,
+                                             method="predict_proba")[:, 1])
     m_prisk["model"] = "Calibrated Logistic Regression"
-    gnb_prisk = GaussianNB().fit(Xp_tr.to_numpy(), yp_tr)
-    m_prisk_gnb = evaluate(yp_te, gnb_prisk.predict_proba(Xp_te.to_numpy())[:, 1])
+    m_prisk_gnb = evaluate(yp, cross_val_predict(GaussianNB(), Xn, yp, cv=skf,
+                                                 method="predict_proba")[:, 1])
     m_prisk_gnb["model"] = "Gaussian Naive Bayes"
-    base_prisk = _baseline_svm(Xp_tr.to_numpy(), yp_tr, Xp_te.to_numpy(), yp_te)
-    metrics["product_risk"] = {"primary": m_prisk, "gaussian_nb": m_prisk_gnb,
-                               "baseline": base_prisk}
-    prisk_final = _calibrated_lr().fit(Xp.to_numpy(), yp)
+    svm = Pipeline([("scale", StandardScaler()), ("svc", LinearSVC(class_weight="balanced"))])
+    svm_score = cross_val_predict(svm, Xn, yp, cv=skf, method="decision_function")
+    span = svm_score.max() - svm_score.min()
+    base_prisk = evaluate(yp, (svm_score - svm_score.min()) / span if span else
+                          np.full_like(svm_score, 0.5, dtype=float))
+    base_prisk["model"] = "Linear SVM (uncalibrated baseline)"
+    base_prisk["note"] = "No native probabilities — scores min-max scaled; not calibrated."
+    for m_ in (m_prisk, m_prisk_gnb, base_prisk):
+        m_["evaluation"] = "5-fold stratified cross-validation"
+    # Product-risk scores are consumed as probabilities, so choose the model by
+    # Brier score (a proper scoring rule: rewards accurate, calibrated
+    # probabilities, not just ranking).
+    gnb_best = m_prisk_gnb["brier"] < m_prisk["brier"]
+    metrics["product_risk"] = {
+        "primary": m_prisk_gnb if gnb_best else m_prisk,
+        "alternative": m_prisk if gnb_best else m_prisk_gnb,
+        "baseline": base_prisk,
+        "best": "gaussian_nb" if gnb_best else "logistic",
+    }
+    prisk_final = (GaussianNB() if gnb_best else _calibrated_lr()).fit(Xp.to_numpy(), yp)
     prod_risk_prob = prisk_final.predict_proba(Xp.to_numpy())[:, 1]
     models["product_risk"] = prisk_final
 
@@ -439,7 +458,7 @@ def _build_overview(data, product_scores, user_scores, review_fake_map):
     orders["category"] = orders["product_id"].map(cat_map)
     by_cat = (orders.groupby("category")["returned"].mean() * 100).round(1)
     return_by_category = [{"category": c, "rate": float(by_cat.get(c, 0))}
-                          for c in ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Toys"]]
+                          for c in ["Fashion", "Footwear", "Electronics", "Home", "Beauty", "Sports"]]
 
     # fraud tier distribution
     tiers = {"Low": 0, "Medium": 0, "High": 0}

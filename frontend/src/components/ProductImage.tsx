@@ -1,51 +1,48 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { fallbackSources, resolveProductImage } from "@/lib/images";
+import { svgPlaceholder } from "@/lib/images";
 
-/** Renders a product photo (real product imagery from the catalogue CDN),
- *  advancing through fallback sources on error so an image always appears. */
+/** Real product photo on a clean white stage (like real storefronts), with a
+ *  category-tinted SVG fallback if the image is missing. */
 export function ProductImage({
+  src,
   category,
-  id,
   name,
-  size = 600,
   className,
+  fit = "contain",
+  eager = false,
 }: {
+  src?: string | null;
   category: string;
-  id: number;
   name: string;
-  size?: number;
   className?: string;
+  fit?: "contain" | "cover";
+  /** load immediately (above-the-fold images) instead of lazily */
+  eager?: boolean;
 }) {
-  const fallbacks = useMemo(() => fallbackSources(category, id, name, size), [category, id, name, size]);
-  const [sources, setSources] = useState<string[]>(fallbacks);
-  const [idx, setIdx] = useState(0);
+  const [failed, setFailed] = useState(!src);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    let alive = true;
-    resolveProductImage(category, id).then((url) => {
-      if (!alive) return;
-      setIdx(0);
-      setLoaded(false);
-      setSources(url ? [url, ...fallbacks] : fallbacks);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [category, id, fallbacks]);
+    setFailed(!src);
+    setLoaded(false);
+  }, [src]);
+
+  const url = failed || !src ? svgPlaceholder(category, name) : src;
+  const placeholder = failed || !src;
 
   return (
-    <div className={cn("relative overflow-hidden bg-slate-100", className)}>
+    <div className={cn("relative overflow-hidden bg-white", className)}>
       {!loaded && <div className="absolute inset-0 animate-pulse bg-slate-100" />}
       <img
-        src={sources[idx]}
+        src={url}
         alt={name}
-        loading="lazy"
+        loading={eager ? "eager" : "lazy"}
         onLoad={() => setLoaded(true)}
-        onError={() => setIdx((i) => Math.min(i + 1, sources.length - 1))}
+        onError={() => setFailed(true)}
         className={cn(
-          "h-full w-full object-cover transition-opacity duration-500",
+          "h-full w-full transition-opacity duration-300",
+          placeholder || fit === "cover" ? "object-cover" : "object-contain p-3",
           loaded ? "opacity-100" : "opacity-0",
         )}
       />
