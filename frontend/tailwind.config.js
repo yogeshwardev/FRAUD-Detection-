@@ -13,10 +13,24 @@ export default {
           DEFAULT: "#0B1120",
           soft: "#111a2e",
         },
-        // corporate accent — deep slate / graphite
+        // accent — marketplace blue (shared by store and dashboard)
         accent: {
-          violet: "#0f172a", // slate-900 (primary)
-          cyan: "#334155", // slate-700 (secondary)
+          violet: "#2874f0", // primary blue
+          cyan: "#1e5bc6", // deeper blue
+        },
+        // classic marketplace palette (storefront)
+        fk: {
+          blue: "#2874f0",
+          deep: "#1e5bc6",
+          yellow: "#ffe11b",
+          orange: "#ff9f00",
+          buy: "#fb641b",
+          green: "#388e3c",
+          bg: "#f1f3f6",
+          ink: "#212121",
+          muted: "#878787",
+          line: "#e0e0e0",
+          navy: "#172337",
         },
         brand: {
           50: "#f1f5f9",
@@ -32,11 +46,11 @@ export default {
         },
       },
       backgroundImage: {
-        "accent-gradient": "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)",
-        "accent-soft": "linear-gradient(135deg,rgba(15,23,42,0.08),rgba(51,65,85,0.08))",
+        "accent-gradient": "linear-gradient(135deg,#2874f0 0%,#1e5bc6 100%)",
+        "accent-soft": "linear-gradient(135deg,rgba(40,116,240,0.10),rgba(30,91,198,0.10))",
       },
       boxShadow: {
-        glow: "0 8px 20px rgba(15,23,42,0.18)",
+        glow: "0 6px 16px rgba(40,116,240,0.25)",
         glass: "0 1px 2px rgba(16,24,40,0.04), 0 4px 16px rgba(16,24,40,0.06)",
         card: "0 1px 2px rgba(16,24,40,0.05), 0 1px 3px rgba(16,24,40,0.08)",
       },

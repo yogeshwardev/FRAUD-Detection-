@@ -16,7 +16,8 @@ final-year project and designed to be demoed live.
 - **Real products**: 157 real catalogue products (real titles, brands, descriptions and
   photos) sold as **300 seller listings** — the same product from different sellers carries its
   own trust score, so shoppers can pick the most trusted seller.
-- **Real storefront**: home, catalog with filters, product pages with photo gallery, seller
+- **Real storefront** in a classic marketplace style (blue header, deal rows, filter sidebar,
+  orange Add to cart / Buy now): home, catalog with filters, product pages with photo gallery, seller
   comparison and an ML trust panel, cart and checkout. Photos are bundled — works **offline**.
 - **5 probabilistic ML modules** trained on realistic synthetic shopper behaviour.
 - Every score is **calibrated** (`CalibratedClassifierCV`) and comes with a **confidence level**.
